@@ -1,0 +1,101 @@
+<div class="row">
+    {{ form_start(form) }}
+        {% block form_widget_simple %}
+            {%- set type = type|default('text') -%}
+            {%- if type == 'range' or type == 'color' -%}
+                {# Attribute "required" is not supported #}
+                {%- set required = false -%}
+            {%- endif -%}
+            <input type="{{ type }}"
+                    {{ block('widget_attributes') }}
+                    {% if value|default %}value="{{ value|json_encode }}" {% endif %}/>
+        {% endblock form_widget_simple %}
+
+        {%- block widget_attributes -%}
+            {%- if id|default %}id="{{ id }}"{% endif -%} {%- if full_name|default %}name="{{ full_name }}"{% endif -%}
+            {%- if disabled|default %} disabled="disabled"{% endif -%}
+            {%- if required|default %} required="required"{% endif -%}
+            {{ block('attributes') }}
+        {%- endblock widget_attributes -%}
+
+        {% block form_widget_compound %}
+
+            <div class="MYCLASS" >
+                {{ block('widget_container_attributes') }}
+                {% if form.parent is empty %}
+                {{ form_errors(form) }}
+                {% endif %}
+                {{ block('form_rows') }}
+                {{ form_rest(form) }}
+            </div>
+
+        {% endblock form_widget_compound %}
+
+        {%- block form_rows -%}
+            {% for child in form|filter(child => not child.rendered) %}
+                {{- form_row(child) -}}
+            {% endfor %}
+        {%- endblock form_rows -%}
+
+        {%- block widget_container_attributes -%}
+            {%- if id|default %}id="{{ id }}"{% endif -%}
+            {{ block('attributes') }}
+        {%- endblock widget_container_attributes -%}
+
+        {% block attributes -%}
+            {%- if attr|default -%}
+                {%- for attrname, attrvalue in attr -%}
+                    {{- " " -}}
+                    {%- if attrname in ['placeholder', 'title'] -%}
+                        {{- attrname }}="{{ translation_domain is same as(false) or attrvalue is null ? attrvalue : attrvalue|trans(attr_translation_parameters, translation_domain) }}"
+                    {%- elseif attrvalue is same as(true) -%}
+                        {{- attrname }}="{{ attrname }}"
+                    {%- elseif attrvalue is not same as(false) -%}
+                        {{- attrname }}="{{ attrvalue }}"
+                    {%- endif -%}
+                {%- endfor -%}
+            {%- endif -%}
+        {%- endblock attributes -%}
+    <button type="submit" class="btn btn-primary btn-sm ms-auto">Сохранить</button>
+    {{ form_end(form) }}
+</div>
+
+{#
+<form>
+    {%- block form_widget -%}
+        {{- block('form_widget_simple') -}}
+    {%- endblock form_widget -%}
+    {%- block form_widget_simple -%}
+        {%- set type = type|default('text') -%}
+        {%- if type == 'range' or type == 'color' -%}
+            {%- set required = false -%}
+        {%- endif -%}
+        <input type="{{ type }}"  />
+    {%- endblock form_widget_simple -%}
+
+    <button type="submit" class="button">Отправить</button>
+</form>
+#}
+{#
+{{ form(form) }}
+{{ form_widget(form) }}
+{{ block('widget_attributes') }}
+{% if value is not empty %}value="{{ value }}" {% endif %}
+#}
+
+    {#
+    {{ form_start(form) }}
+<div class="my-custom-class-for-errors">
+    {{ form_errors(form) }}
+</div>
+
+<div class="row">
+<div class="col">
+    {{ form_row(form.task) }}
+</div>
+<div class="col" id="some-custom-id">
+    {{ form_row(form.dueDate) }}
+</div>
+</div>
+        {{ form_end(form) }}
+    #}

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello IndexController!{% endblock %}
+{% block title %}Привет IndexController!{% endblock %}
 
 {% block body %}
 <style>
@@ -9,12 +9,21 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <h1>Привет {{ is_granted('IS_AUTHENTICATED_FULLY') ? app.user.email : controller_name }}! ✅</h1>
 
-    This friendly message is coming from:
+    Это сообщение происходит из:
     <ul>
-        <li>Your controller at <code><a href="{{ '/var/www/sys4/src/Controller/IndexController.php'|file_link(0) }}">src/Controller/IndexController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/var/www/sys4/templates/index/index.html.twig'|file_link(0) }}">templates/index/index.html.twig</a></code></li>
+        <li>Ваш контроллер <code><a href="{{ '/var/www/sys4/src/Controller/IndexController.php'|file_link(0) }}">src/Controller/IndexController.php</a></code></li>
+        <li>Ваш шаблон <code><a href="{{ '/var/www/sys4/templates/index/index.html.twig'|file_link(0) }}">templates/index/index.html.twig</a></code></li>
     </ul>
+
+    {% if user %}
+        <p><a href="/logout">Выход</a></p>
+    {% else %}
+        <p><a href="/register">Регистрация</a></p>
+        <p><a href="/login">Вход</a></p>
+    {% endif %}
+
+    <p><a href="/manage">manage</a></p>
 </div>
 {% endblock %}

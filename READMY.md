@@ -42,7 +42,7 @@ DATABASE_URL=mysql://root:123@127.0.0.1:3306/sys4
 ```bash
 php bin/console doctrine:database:create
 ```
-Пользователи и доступы:
+### Пользователи и доступы:
 ```bash
 $ composer require symfony/security-bundle
 $ php bin/console make:user
@@ -104,4 +104,11 @@ $ php bin/console doctrine:migrations:migrate
     fastcgi_buffers 16 32k;
     fastcgi_buffer_size 64k;
     fastcgi_busy_buffers_size 64k;
+```
+
+### Webpack Encore
+
+Установка пакета
+```bash
+$ composer require symfony/webpack-encore-bundle
 ```
