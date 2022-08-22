@@ -10,6 +10,8 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class UserType extends AbstractType
 {
@@ -31,7 +33,20 @@ class UserType extends AbstractType
                 ],
                 'multiple'=> true
             ])
-            ->add('password', PasswordType::class)
+            ->add('password', PasswordType::class, [
+                'attr' => ['autocomplete' => 'new-password'],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'пожалуйста, введите пароль',
+                    ]),
+                    new Length([
+                        'min' => 6,
+                        'minMessage' => 'Ваш пароль должен быть не менее {{ limit }} символов',
+                        // max length allowed by Symfony for security reasons
+                        'max' => 4096,
+                    ]),
+                ],
+            ])
             ->add('isVerified')
         ;
     }

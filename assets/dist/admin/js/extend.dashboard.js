@@ -8,5 +8,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
         } else {
             checkboxes.prop('checked', false);
         }
-    })
+    });
+    $('.js-delete-el').click(function(){
+        let id   = $(this).data('id');
+        let link = $(this).data('link');
+        if (!id || !link) {
+            return false;
+        }
+        window.location = link + id;
+    });
 });

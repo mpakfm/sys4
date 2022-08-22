@@ -54,8 +54,8 @@
                                         {% for item in elements %}
                                             <tr data-id="{{ item.id }}">
                                                 <td class="align-middle">
-                                                    <button type="button" class="btn btn-danger btn-sm mb-0" data-id="{{ item.id }}">Удалить</button>
-                                                    <button type="button" class="btn btn-warning btn-sm mb-0" data-id="{{ item.id }}">Править</button>
+                                                    <button type="button" class="btn btn-danger btn-sm mb-0 js-delete-el" data-link="/manage/delete/" data-id="{{ item.id }}">Удалить</button>
+                                                    <button type="button" class="btn btn-warning btn-sm mb-0 js-edit-el"  data-link="/manage/user/" data-id="{{ item.id }}">Править</button>
                                                 </td>
                                                 <td class="align-middle">
                                                     <div class=" form-check form-check-info text-start">
