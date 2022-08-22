@@ -46,6 +46,7 @@
                                                 <th class="text-secondary opacity-7 ps-4 w-10"></th>
                                                 <th class="text-uppercase text-left text-secondary text-xxs font-weight-bolder opacity-7 ps-4">ID</th>
                                                 <th class="text-uppercase text-left text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Email</th>
+                                                <th class="text-uppercase text-left text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Имя</th>
                                                 <th class="text-uppercase text-left text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Роль</th>
                                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Верифицирован</th>
                                             </tr>
@@ -69,6 +70,10 @@
                                                     <span class="text-primary text-sm">{{ item.email }}</span>
                                                 </td>
                                                 <td class="align-middle text-left">
+                                                    <p class="text-xs font-weight-bold mb-0">{{ item.name }}</p>
+                                                    <p class="text-xs text-secondary mb-0">{{ item.lastName }}</p>
+                                                </td>
+                                                <td class="align-middle text-left">
                                                     <span class="text-primary text-sm">{{ item.getRoles()|join(', ') }}</span>
                                                 </td>
                                                 <td class="align-middle text-center text-sm">
@@ -89,6 +94,7 @@
                                                         <input type="checkbox" class="form-check-input js-select-all">
                                                     </div>
                                                 </td>
+                                                <td></td>
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>

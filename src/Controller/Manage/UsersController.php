@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -45,7 +46,41 @@ class UsersController extends BaseController
     }
 
     /**
-     * @Route("/manage/user", name="app_manage_user")
+     * @Route("/manage/user/{id}", name="app_manage_user_edit")
+     */
+    public function edit(int $id, Request $request, UserRepository $repository, ValidatorInterface $validator, UserPasswordHasherInterface $userPasswordHasher): Response
+    {
+        $this->preLoad($request);
+
+        if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
+            throw new AccessDeniedException('Access Denied.');
+        }
+        if (!$id) {
+            throw new NotFoundHttpException('Пользователь не найден');
+        }
+        $actionUser = $this->getUser();
+        $user       = $repository->find($id);
+        if (!$user) {
+            throw new NotFoundHttpException('Пользователь не найден');
+        }
+        $form   = $this->createForm(UserType::class, $user);
+        $errors = null;
+        if ($form->isSubmitted() && $form->isValid()) {
+
+        }
+
+        return $this->baseRenderForm('manage/users/edit.html.twig', [
+            'menu' => [
+                'pount' => 'users'
+            ],
+            'errors'  => $errors,
+            'item'    => $user,
+            'form'    => $form,
+        ]);
+    }
+
+    /**
+     * @Route("/manage/user", name="app_manage_user_create")
      */
     public function create(Request $request, UserRepository $repository, ValidatorInterface $validator, UserPasswordHasherInterface $userPasswordHasher): Response
     {
@@ -86,7 +121,7 @@ class UsersController extends BaseController
     }
 
     /**
-     * @Route("/manage/delete/{id}", name="app_manage_delete")
+     * @Route("/manage/delete/{id}", name="app_manage_user_delete")
      */
     public function delete(int $id, Request $request, UserRepository $repository): Response
     {

@@ -1,0 +1,201 @@
+{% extends 'manage/base.html.twig' %}
+
+{% block title %}Пользователь{% endblock %}
+
+{% block breadcrumb %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-white" href="javascript:;">Страницы</a></li>
+            <li class="breadcrumb-item text-sm text-white active" aria-current="page"><a class="opacity-5 text-white" href="/manage">Панель</a></li>
+            <li class="breadcrumb-item text-sm text-white active" aria-current="page"><a class="opacity-5 text-white" href="/manage/users">Список пользователей</a></li>
+        </ol>
+        <h6 class="font-weight-bolder text-white mb-0">Пользователь</h6>
+    </nav>
+{% endblock %}
+
+{% block body %}
+
+    {{ form_start(form) }}
+    <input name="_method" value="POST" type="hidden">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header pb-0">
+                    <div class="d-flex align-items-center">
+                        <p class="mb-0">Пользователь</p>
+                        <button type="submit" class="btn btn-primary btn-sm ms-auto">Сохранить</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="text-uppercase text-sm">Пользовательские поля</p>
+
+                    {{ form_errors(form) }}
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="user_email" class="form-control-label">Email</label>
+                                <input id="user_email" class="form-control" type="email" name="user[email]" {% if item.email is not empty %}value="{{ item.email }}" {% endif %}>
+                                {{ form_errors(form.email, {'attr': {'class': 'form-input'}}) }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group form-check form-check-info">
+                                <label for="user_isVerified" class="form-control-label ">Верифицирован</label>
+                                <input id="user_isVerified" type="checkbox" class="form-check-input " name="user[isVerified]" value="1" {% if item.isVerified == 1 %}checked="checked" {% endif %}>
+                                {{ form_errors(form.isVerified) }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="user_new_password" class="form-control-label">Пароль</label>
+                                <input id="user_new_password" class="form-control " type="password" name="user[new_password]" value="">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="user_repeat_password" class="form-control-label">Подтвердить пароль</label>
+                                <input id="user_repeat_password" class="form-control " type="password" name="user[repeat_password]" value="">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="user_name" class="form-control-label">Имя</label>
+                                <input id="user_name" class="form-control " type="text" name="user[name]" {% if item.name is not empty %}value="{{ item.name }}" {% endif %}>
+                                {{ form_errors(form.name) }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="user_lastName" class="form-control-label">Фамилия</label>
+                                <input id="user_lastName" class="form-control " type="text" name="user[lastName]" {% if item.lastName is not empty %}value="{{ item.lastName }}" {% endif %}>
+                                {{ form_errors(form.lastName) }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <pre>{{ item.roles|json_encode }}</pre>
+                                <label for="user_roles" class="form-control-label">Роли</label>
+                                <select id="user_roles" class="form-control " name="user[roles][]" multiple>
+                                    <option value="ROLE_USER" {% if 'ROLE_USER' in item.roles %}selected{% endif %}>Пользователь</option>
+                                    <option value="ROLE_ADMIN" {% if 'ROLE_ADMIN' in item.roles %}selected{% endif %}>Админ</option>
+                                    <option value="ROLE_ALLOWED_TO_SWITCH" {% if 'ROLE_ALLOWED_TO_SWITCH' in item.roles %}selected{% endif %}>Админ со сменой аккаунта</option>
+                                    <option value="ROLE_SUPER_ADMIN" {% if 'ROLE_SUPER_ADMIN' in item.roles %}selected{% endif %}>Супер Админ</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--
+                    <hr class="horizontal dark">
+                    <p class="text-uppercase text-sm">Contact Information</p>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="example-text-input" class="form-control-label">Address</label>
+                                <input class="form-control" type="text" value="Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="example-text-input" class="form-control-label">City</label>
+                                <input class="form-control" type="text" value="New York">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="example-text-input" class="form-control-label">Country</label>
+                                <input class="form-control" type="text" value="United States">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="example-text-input" class="form-control-label">Postal code</label>
+                                <input class="form-control" type="text" value="437300">
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="horizontal dark">
+                    <p class="text-uppercase text-sm">About me</p>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="example-text-input" class="form-control-label">About me</label>
+                                <input class="form-control" type="text" value="A beautiful Dashboard for Bootstrap 5. It is Free and Open Source.">
+                            </div>
+                        </div>
+                    </div>
+                    -->
+                </div>
+            </div>
+        </div>
+        <!--
+        <div class="col-md-4">
+            <div class="card card-profile">
+                <img src="img/bg-profile.jpg" alt="Image placeholder" class="card-img-top">
+                <div class="row justify-content-center">
+                    <div class="col-4 col-lg-4 order-lg-2">
+                        <div class="mt-n4 mt-lg-n6 mb-4 mb-lg-0">
+                            <a href="javascript:;">
+                                <img src="img/team-2.jpg" class="rounded-circle img-fluid border border-2 border-white">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-header text-center border-0 pt-0 pt-lg-2 pb-4 pb-lg-3">
+                    <div class="d-flex justify-content-between">
+                        <a href="javascript:;" class="btn btn-sm btn-info mb-0 d-none d-lg-block">Connect</a>
+                        <a href="javascript:;" class="btn btn-sm btn-info mb-0 d-block d-lg-none"><i class="ni ni-collection"></i></a>
+                        <a href="javascript:;" class="btn btn-sm btn-dark float-right mb-0 d-none d-lg-block">Message</a>
+                        <a href="javascript:;" class="btn btn-sm btn-dark float-right mb-0 d-block d-lg-none"><i class="ni ni-email-83"></i></a>
+                    </div>
+                </div>
+                <div class="card-body pt-0">
+                    <div class="row">
+                        <div class="col">
+                            <div class="d-flex justify-content-center">
+                                <div class="d-grid text-center">
+                                    <span class="text-lg font-weight-bolder">22</span>
+                                    <span class="text-sm opacity-8">Friends</span>
+                                </div>
+                                <div class="d-grid text-center mx-4">
+                                    <span class="text-lg font-weight-bolder">10</span>
+                                    <span class="text-sm opacity-8">Photos</span>
+                                </div>
+                                <div class="d-grid text-center">
+                                    <span class="text-lg font-weight-bolder">89</span>
+                                    <span class="text-sm opacity-8">Comments</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <h5>
+                            Mark Davis<span class="font-weight-light">, 35</span>
+                        </h5>
+                        <div class="h6 font-weight-300">
+                            <i class="ni location_pin mr-2"></i>Bucharest, Romania
+                        </div>
+                        <div class="h6 mt-4">
+                            <i class="ni business_briefcase-24 mr-2"></i>Solution Manager - Creative Tim Officer
+                        </div>
+                        <div>
+                            <i class="ni education_hat mr-2"></i>University of Computer Science
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        -->
+    </div>
+    </form>
+    {#  {{ form_end(form) }}  #}
+{% endblock %}
+
+{%- block form_errors -%}
+    {%- if errors|length > 0 -%}
+        {%- for error in errors -%}
+            <div class="alert alert-danger">{{ error.message }}</div>
+        {%- endfor -%}
+    {%- endif -%}
+{%- endblock form_errors -%}

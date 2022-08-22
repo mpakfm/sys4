@@ -17,4 +17,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
         }
         window.location = link + id;
     });
+    $('.js-edit-el').click(function(){
+        let id   = $(this).data('id');
+        let link = $(this).data('link');
+        if (!id || !link) {
+            return false;
+        }
+        window.location = link + id;
+    });
 });
