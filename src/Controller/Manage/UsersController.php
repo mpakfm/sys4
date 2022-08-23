@@ -13,7 +13,6 @@ use App\Controller\BaseController;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
-use Mpakfm\Printu;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormErrorIterator;
 use Symfony\Component\HttpFoundation\Request;
@@ -70,7 +69,6 @@ class UsersController extends BaseController
         $errors = null;
         if ($form->isSubmitted() && $form->isValid()) {
             $password = $form->get('password')->getData();
-            Printu::obj($password)->title('[edit] $password');
             if ($password) {
                 $user->setPassword(
                     $userPasswordHasher->hashPassword($user, $password)
