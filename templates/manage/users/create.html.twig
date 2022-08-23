@@ -40,10 +40,24 @@
                             </div>
                         </div>
                         <div class="col-md-6">
+                            <div class="form-group form-check form-check-info">
+                                <label for="user_isVerified" class="form-control-label ">Верифицирован</label>
+                                <input id="user_isVerified" type="checkbox" class="form-check-input " name="user[isVerified]" value="1">
+                                {{ form_errors(form.isVerified) }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
                             <div class="form-group">
-                                <label for="user_password" class="form-control-label">Пароль</label>
-                                <input id="user_password" class="form-control " type="password" name="user[password]" value="">
-                                {{ form_errors(form.password) }}
+                                <label for="user_password_first" class="form-control-label">Пароль</label>
+                                <input id="user_password_first" class="form-control " type="password" name="user[password][first]" value="">
+                                {{ form_errors(form.password.first) }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="user_password_second" class="form-control-label">Подтвердить пароль</label>
+                                <input id="user_password_second" class="form-control " type="password" name="user[password][second]" value="">
+                                {{ form_errors(form.password.second) }}
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -69,13 +83,6 @@
                                     <option value="ROLE_ALLOWED_TO_SWITCH">Админ со сменой аккаунта</option>
                                     <option value="ROLE_SUPER_ADMIN">Супер Админ</option>
                                 </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group form-check form-check-info">
-                                <label for="user_isVerified" class="form-control-label ">Верифицирован</label>
-                                <input id="user_isVerified" type="checkbox" class="form-check-input " name="user[isVerified]" value="1">
-                                {{ form_errors(form.isVerified) }}
                             </div>
                         </div>
                     </div>

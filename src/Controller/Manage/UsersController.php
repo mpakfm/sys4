@@ -13,6 +13,8 @@ use App\Controller\BaseController;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
+use Mpakfm\Printu;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormErrorIterator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -64,9 +66,22 @@ class UsersController extends BaseController
             throw new NotFoundHttpException('Пользователь не найден');
         }
         $form   = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
         $errors = null;
         if ($form->isSubmitted() && $form->isValid()) {
+            $password = $form->get('password')->getData();
+            Printu::obj($password)->title('[edit] $password');
+            if ($password) {
+                $user->setPassword(
+                    $userPasswordHasher->hashPassword($user, $password)
+                );
+            }
 
+            $errors = $validator->validate($user);
+            if (!count($errors)) {
+                $repository->add($user, true);
+                return $this->redirectToRoute('app_manage_users');
+            }
         }
 
         return $this->baseRenderForm('manage/users/edit.html.twig', [
@@ -95,11 +110,10 @@ class UsersController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var User $user */
             $user = $form->getData();
+
+            $password = $form->get('password')->getData();
             $user->setPassword(
-                $userPasswordHasher->hashPassword(
-                    $user,
-                    $form->get('password')->getData()
-                )
+                $userPasswordHasher->hashPassword($user, $password)
             );
             $errors = $validator->validate($user);
             if (!count($errors)) {

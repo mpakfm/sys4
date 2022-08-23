@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -33,19 +34,21 @@ class UserType extends AbstractType
                 ],
                 'multiple'=> true
             ])
-            ->add('password', PasswordType::class, [
-                'attr' => ['autocomplete' => 'new-password'],
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'пожалуйста, введите пароль',
-                    ]),
-                    new Length([
-                        'min' => 6,
-                        'minMessage' => 'Ваш пароль должен быть не менее {{ limit }} символов',
-                        // max length allowed by Symfony for security reasons
-                        'max' => 4096,
-                    ]),
-                ],
+            ->add('password', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'invalid_message' => 'Поля паролей должны совпадать.',
+                'mapped' => false,
+//                'constraints' => [
+//                    new NotBlank([
+//                        'message' => 'пожалуйста, введите пароль',
+//                    ]),
+//                    new Length([
+//                        'min' => 6,
+//                        'minMessage' => 'Ваш пароль должен быть не менее {{ limit }} символов',
+//                        // max length allowed by Symfony for security reasons
+//                        'max' => 4096,
+//                    ]),
+//                ],
             ])
             ->add('isVerified')
         ;

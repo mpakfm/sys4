@@ -23,19 +23,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     /**
-     * @Assert\NotBlank(message="Необходимо заполнить")
+     * @Assert\NotBlank(message="Необходимо заполнить {CODE: E}")
      * @ORM\Column(type="string", length=180, unique=true)
      */
     private $email;
 
     /**
-     * @Assert\NotBlank(message="Необходимо заполнить")
+     * @Assert\NotBlank(message="Необходимо заполнить {CODE: N}")
      * @ORM\Column(type="string", length=180, nullable=true)
      */
     private $name;
 
     /**
-     * @Assert\NotBlank(message="Необходимо заполнить")
+     * @Assert\NotBlank(message="Необходимо заполнить {CODE: L}")
      * @ORM\Column(type="string", length=180, nullable=true)
      */
     private $lastName;
@@ -47,7 +47,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @var string The hashed password
-     * @Assert\NotBlank(message="Необходимо заполнить")
      * @ORM\Column(type="string")
      */
     private $password;
