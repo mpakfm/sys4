@@ -6,11 +6,13 @@ use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -51,6 +53,27 @@ class UserType extends AbstractType
 //                ],
             ])
             ->add('isVerified')
+            ->add('userpic', FileType::class, [
+                'mapped'   => false,
+                'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '1024k',
+                        'mimeTypes' => [
+                            'image/gif',
+                            'image/jpeg',
+                            'image/pjpeg',
+                            'image/png',
+                            'image/svg+xml',
+                            'image/tiff',
+                            'image/vnd.microsoft.icon',
+                            'image/vnd.wap.wbmp',
+                            'image/webp',
+                        ],
+                        'mimeTypesMessage' => 'Только изображения',
+                    ])
+                ],
+            ])
         ;
     }
 
