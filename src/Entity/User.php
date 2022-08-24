@@ -56,6 +56,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $isVerified = false;
 
+    /** @ORM\Column(type="string", nullable=true) */
+    private $userpic;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -147,7 +150,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPassword(string $password): self
     {
         $this->password = $password;
+        return $this;
+    }
 
+    public function getUserpic(): string
+    {
+        return $this->userpic;
+    }
+
+    public function setUserpic(string $userpic): self
+    {
+        $this->userpic = $userpic;
         return $this;
     }
 
