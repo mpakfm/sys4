@@ -143,7 +143,12 @@
                                 <img src="/uploads/{{ item.userpic }}" class="rounded-circle img-fluid border border-2 border-white">
                                 {% endif %}
                             </a>
-                            {{ form_row(form.userpic) }}
+                            <div class="form-group mt-3">
+                                <!--<label for="user_userpic" class="form-control-label">Подтвердить пароль</label>-->
+                                <input id="user_userpic" class="form-control" style="width: 150%;" type="file" name="user[userpic]" value="">
+                                {{ form_errors(form.userpic) }}
+                            </div>
+                            {# {{ form_row(form.userpic) }} #}
                         </div>
                     </div>
                 </div>
