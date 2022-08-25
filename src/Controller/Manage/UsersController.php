@@ -31,14 +31,22 @@ class UsersController extends BaseController
     public function index(Request $request, UserRepository $repository): Response
     {
         $this->preLoad($request);
-        //$hasAccess = $this->isGranted('ROLE_ADMIN');
-        //$this->denyAccessUnlessGranted('ROLE_ADMIN');
-        $criteria = [];
-        $order    = ['id' => 'asc'];
-        $limit    = 20;
-        $offset   = 0;
-        $elements = $repository->findBy($criteria, $order, $limit, $offset);
+
+        $query = null;
+        if (!empty($request->get('query'))) {
+            $query = $request->get('query');
+            $elements = $repository->searchByNames($request->get('query'));
+        } else {
+            //$hasAccess = $this->isGranted('ROLE_ADMIN');
+            //$this->denyAccessUnlessGranted('ROLE_ADMIN');
+            $criteria = [];
+            $order = ['id' => 'asc'];
+            $limit = 20;
+            $offset = 0;
+            $elements = $repository->findBy($criteria, $order, $limit, $offset);
+        }
         return $this->baseRender('manage/users/index.html.twig', [
+            'query'    => $query,
             'elements' => $elements,
             'menu' => [
                 'pount' => 'users'

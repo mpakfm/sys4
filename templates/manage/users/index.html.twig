@@ -1,6 +1,9 @@
 {% extends 'manage/base.html.twig' %}
 
 {% block title %}Список пользователей{% endblock %}
+{% block page_script %}
+    <script src="js/users.js"></script>
+{% endblock %}
 
 {% block breadcrumb %}
     <nav aria-label="breadcrumb">
@@ -18,12 +21,14 @@
         <div class="col-md-12">
             <div class="card mb-4 p-md-4 p-sm-2">
                 <div class="row">
+                    <form id="users-search" action="/manage/users" method="get">
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="example-text-input" class="form-control-label">Поиск и фильтр</label>
-                            <input class="form-control" type="text" value="" placeholder="email">
+                            <input class="form-control" name="query" type="text" value="{{ query }}" placeholder="email">
                         </div>
                     </div>
+                    </form>
                 </div>
                 <div class="row">
                     <div class="col-12">

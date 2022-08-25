@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Mpakfm\Printu;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
