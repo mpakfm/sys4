@@ -13,6 +13,7 @@ use App\Controller\BaseController;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
+use Mpakfm\Printu;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormErrorIterator;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,7 +27,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class UsersController extends BaseController
 {
     /**
-     * @Route("/manage/users", name="app_manage_users")
+     * @Route("/manage/user/list", name="app_manage_user_list")
      */
     public function index(Request $request, UserRepository $repository): Response
     {
@@ -55,7 +56,7 @@ class UsersController extends BaseController
     }
 
     /**
-     * @Route("/manage/user/{id}", name="app_manage_user_edit")
+     * @Route("/manage/user/edit/{id}", name="app_manage_user_edit")
      */
     public function edit(int $id, Request $request, UserRepository $repository, ValidatorInterface $validator, UserPasswordHasherInterface $userPasswordHasher): Response
     {
@@ -86,7 +87,7 @@ class UsersController extends BaseController
             $errors = $validator->validate($user);
             if (!count($errors)) {
                 $repository->add($user, true);
-                return $this->redirectToRoute('app_manage_users');
+                return $this->redirectToRoute('app_manage_user_list');
             }
         }
 
@@ -101,7 +102,54 @@ class UsersController extends BaseController
     }
 
     /**
-     * @Route("/manage/user", name="app_manage_user_create")
+     * @Route("/manage/user/copy/{id}", name="app_manage_user_copy")
+     */
+    public function copy(int $id, Request $request, UserRepository $repository, ValidatorInterface $validator, UserPasswordHasherInterface $userPasswordHasher): Response
+    {
+        $this->preLoad($request);
+
+        if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
+            throw new AccessDeniedException('Access Denied.');
+        }
+        if (!$id) {
+            throw new NotFoundHttpException('Пользователь не найден');
+        }
+        $actionUser = $this->getUser();
+        $copyuser   = $repository->find($id);
+        $user       = new User();
+        if (!$copyuser) {
+            throw new NotFoundHttpException('Пользователь не найден');
+        }
+        $form   = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+        $errors = null;
+        if ($form->isSubmitted() && $form->isValid()) {
+            $password = $form->get('password')->getData();
+            if ($password) {
+                $user->setPassword(
+                    $userPasswordHasher->hashPassword($user, $password)
+                );
+            }
+
+            $errors = $validator->validate($user);
+            if (!count($errors)) {
+                $repository->add($user, true);
+                return $this->redirectToRoute('app_manage_user_list');
+            }
+        }
+
+        return $this->baseRenderForm('manage/users/copy.html.twig', [
+            'menu' => [
+                'pount' => 'users'
+            ],
+            'errors'  => $errors,
+            'item'    => $copyuser,
+            'form'    => $form,
+        ]);
+    }
+
+    /**
+     * @Route("/manage/user/create", name="app_manage_user_create")
      */
     public function create(Request $request, UserRepository $repository, ValidatorInterface $validator, UserPasswordHasherInterface $userPasswordHasher): Response
     {
@@ -124,7 +172,7 @@ class UsersController extends BaseController
             $errors = $validator->validate($user);
             if (!count($errors)) {
                 $repository->add($user, true);
-                return $this->redirectToRoute('app_manage_users');
+                return $this->redirectToRoute('app_manage_user_list');
             }
         } elseif ($form->isSubmitted() && !$form->isValid()) {
             /** @var FormErrorIterator $errors */
@@ -137,11 +185,12 @@ class UsersController extends BaseController
             ],
             'errors'  => $errors,
             'form'    => $form,
+            'item'    => $user,
         ]);
     }
 
     /**
-     * @Route("/manage/delete/{id}", name="app_manage_user_delete")
+     * @Route("/manage/user/delete/{id}", name="app_manage_user_delete")
      */
     public function delete(int $id, Request $request, UserRepository $repository): Response
     {
@@ -160,7 +209,24 @@ class UsersController extends BaseController
             throw new AccessDeniedException('Access Denied.');
         }
         $repository->remove($user, true);
-        return $this->redirectToRoute('app_manage_users');
+        return $this->redirectToRoute('app_manage_user_list');
     }
 
+    /**
+     * @Route("/manage/user/check_email", name="app_manage_user_check_email", methods={"POST"})
+     */
+    public function checkEmail(Request $request, UserRepository $repository)
+    {
+        if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
+            throw new AccessDeniedException('Access Denied.');
+        }
+        /** @var \App\Entity\User[] $result */
+        $result = $repository->findBy(['email' => $request->get('email')]);
+        Printu::obj($request->get('email'))->title('email');
+        Printu::obj($result)->title('$result');
+        return $this->json([
+            'origin' => $request->get('email'),
+            'count'  => count($result),
+        ]);
+    }
 }

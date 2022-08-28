@@ -1,6 +1,6 @@
 {% extends 'manage/base.html.twig' %}
 
-{% block title %}Новый пользователь{% endblock %}
+{% block title %}Скопированный пользователь{% endblock %}
 
 {% block page_script %}<script src="js/users.js"></script>{% endblock %}
 
@@ -11,7 +11,7 @@
             <li class="breadcrumb-item text-sm text-white active" aria-current="page"><a class="opacity-5 text-white" href="/manage">Панель</a></li>
             <li class="breadcrumb-item text-sm text-white active" aria-current="page"><a class="opacity-5 text-white" href="/manage/user/list">Список пользователей</a></li>
         </ol>
-        <h6 class="font-weight-bolder text-white mb-0">Новый пользователь</h6>
+        <h6 class="font-weight-bolder text-white mb-0">Скопированный пользователь</h6>
     </nav>
 {% endblock %}
 
@@ -19,17 +19,13 @@
 
     {{ form_start(form) }}
     <input name="_method" value="POST" type="hidden">
-    {% if item.id %}
-        <input id="user_id" name="user_id" value="{{ item.id }}" type="hidden">
-    {% else %}
-        <input id="user_id" name="user_id" value="" type="hidden">
-    {% endif %}
+    <input id="user_id" name="user_id" value="" type="hidden">
     <div class="row">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header pb-0">
                     <div class="d-flex align-items-center">
-                        <p class="mb-0">Новый пользователь</p>
+                        <p class="mb-0">Скопированный пользователь</p>
                         <button type="submit" class="btn btn-primary btn-sm ms-auto">Сохранить</button>
                     </div>
                 </div>
@@ -90,6 +86,7 @@
                                     <option value="ROLE_ALLOWED_TO_SWITCH">Админ со сменой аккаунта</option>
                                     <option value="ROLE_SUPER_ADMIN">Супер Админ</option>
                                 </select>
+                                {{ item.roles|json_encode }}
                             </div>
                         </div>
                     </div>

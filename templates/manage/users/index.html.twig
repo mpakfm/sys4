@@ -21,7 +21,7 @@
         <div class="col-md-12">
             <div class="card mb-4 p-md-4 p-sm-2">
                 <div class="row">
-                    <form id="users-search" action="/manage/users" method="get">
+                    <form id="users-search" action="/manage/user/list" method="get">
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="example-text-input" class="form-control-label">Поиск и фильтр</label>
@@ -38,7 +38,7 @@
                                     <h6>Список пользователей</h6>
                                 </div>
                                 <div class="card-header col-2">
-                                    <a href="/manage/user"><button type="button" class="btn btn-info btn-sm mb-0">Создать</button></a>
+                                    <a href="/manage/user/create"><button type="button" class="btn btn-info btn-sm mb-0">Создать</button></a>
                                 </div>
                             </div>
                             <div class="card">
@@ -47,6 +47,7 @@
                                     <table class="table align-items-center mb-0 js-list">
                                         <thead>
                                             <tr>
+                                                <th class="text-uppercase text-left text-secondary text-xxs font-weight-bolder opacity-7 ps-4"></th>
                                                 <th class="text-secondary opacity-7 ps-4 w-20"></th>
                                                 <th class="text-secondary opacity-7 ps-4 w-10"></th>
                                                 <th class="text-uppercase text-left text-secondary text-xxs font-weight-bolder opacity-7 ps-4">ID</th>
@@ -60,8 +61,11 @@
                                         {% for item in elements %}
                                             <tr data-id="{{ item.id }}">
                                                 <td class="align-middle">
-                                                    <button type="button" class="btn btn-danger btn-sm mb-0 js-delete-el" data-link="/manage/delete/" data-id="{{ item.id }}">Удалить</button>
-                                                    <button type="button" class="btn btn-warning btn-sm mb-0 js-edit-el"  data-link="/manage/user/" data-id="{{ item.id }}">Править</button>
+                                                    <span class="text-xs text-secondary mb-0">#{{ loop.index }}</span>
+                                                </td>
+                                                <td class="align-middle">
+                                                    <button type="button" class="btn btn-danger btn-sm mb-0 js-delete-el" data-link="/manage/user/delete/" data-id="{{ item.id }}">Удалить</button>
+                                                    <button type="button" class="btn btn-warning btn-sm mb-0 js-edit-el"  data-link="/manage/user/edit/" data-id="{{ item.id }}">Править</button>
                                                 </td>
                                                 <td class="align-middle">
                                                     <div class=" form-check form-check-info text-start">
@@ -93,6 +97,7 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>
+                                                <td></td>
                                                 <td class="text-right text-secondary text-lg font-weight-bolder opacity-7 ps-4">Выбрать всех</td>
                                                 <td class="align-middle">
                                                     <div class=" form-check form-check-info text-start">
