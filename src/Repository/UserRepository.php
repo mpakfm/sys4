@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Mpakfm\Printu;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
@@ -56,17 +57,72 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->add($user, true);
     }
 
-    public function searchByNames(string $query)
+    public function getCount(array $criteria)
     {
         $conn = $this->getEntityManager()->getConnection();
+
+        $where     = '';
+        $whereLine = [];
+        if (!empty($criteria)) {
+            foreach ($criteria as $field => $value) {
+                $whereLine[] = "{$field} = {$value}";
+            }
+            if (!empty($whereLine)) {
+                $where = "WHERE " . implode(' AND ', $whereLine);
+            }
+        }
+
+        $sqlAll = "
+            SELECT id FROM user
+            {$where}
+            ";
+        $stmtAll   = $conn->prepare($sqlAll);
+        $resultAll = $stmtAll->executeQuery();
+        $all       = $resultAll->rowCount();
+
+        return $all;
+    }
+
+    public function searchByNames(string $query, array $orderBy = null, $limit = null, $offset = null)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sqlAll = "
+            SELECT id FROM user u
+            WHERE u.email LIKE ('%{$query}%') OR u.name LIKE ('%{$query}%') OR u.last_name LIKE ('%{$query}%')
+            ";
+        $stmtAll   = $conn->prepare($sqlAll);
+        $resultAll = $stmtAll->executeQuery();
+        $all       = $resultAll->rowCount();
+
+        Printu::obj($all)->title('$all');
+
+        $order = '';
+        if (!empty($orderBy)) {
+            $orderList = [];
+            foreach ($orderBy as $field => $val) {
+                $orderList[] = "{$field} {$val}";
+            }
+            $order = 'ORDER BY ' . implode(', ', $orderList);
+        }
+        $counter = '';
+        if (!is_null($limit)) {
+            $counter = "LIMIT {$limit}";
+            if (!is_null($offset)) {
+                $counter = "LIMIT {$offset}, {$limit}";
+            }
+        }
 
         $sql = "
             SELECT * FROM user u
             WHERE u.email LIKE ('%{$query}%') OR u.name LIKE ('%{$query}%') OR u.last_name LIKE ('%{$query}%')
-            ORDER BY u.ID ASC
+            {$order} {$counter}
             ";
+        Printu::obj($sql)->title('$sql');
         $stmt = $conn->prepare($sql);
         $resultSet = $stmt->executeQuery();
+        $onPage    = $resultSet->rowCount();
+        Printu::obj($onPage)->title('$onPage');
         $result = [];
         while ($item = $resultSet->fetchAssociative()) {
             $user = new User();
@@ -84,7 +140,11 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             $user->setRoles(json_decode($item['roles']));
             $result[] = $user;
         }
-        return $result;
+        return [
+            'list'    => $result,
+            'all'     => $all,
+            'on_page' => $onPage,
+        ];
     }
 
 //    /**

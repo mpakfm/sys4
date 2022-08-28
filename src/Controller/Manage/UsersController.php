@@ -13,6 +13,7 @@ use App\Controller\BaseController;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
+use App\Response\ListCounter;
 use Mpakfm\Printu;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormErrorIterator;
@@ -26,29 +27,70 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UsersController extends BaseController
 {
+    /** @var int */
+    public $defaultLimit = 20;
+    /** @var int */
+    public $defaultOffset = 0;
+    /** @var string[] */
+    public $defaultOrder = [
+        'id' => 'asc'
+    ];
+    /** @var string[] */
+    public $accessOrder = ['id', 'name', 'last_name'];
+    /** @var int */
+    public $limit;
+    /** @var int */
+    public $offset;
+    /** @var string[] */
+    public $order;
+
     /**
      * @Route("/manage/user/list", name="app_manage_user_list")
      */
     public function index(Request $request, UserRepository $repository): Response
     {
         $this->preLoad($request);
+        if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
+            throw new AccessDeniedException('Access Denied.');
+        }
 
-        $query = null;
+        $query   = null;
+        $counter = new ListCounter();
+
+        $order = $request->get('order');
+        if ($order && !empty($order)) {
+            foreach ($order as $field => $val) {
+                if (in_array($field, $this->accessOrder) && in_array($val, ['asc', 'desc'])) {
+                    $this->order[$field] = $val;
+                }
+            }
+        }
+
+        $this->limit  = $request->get('limit') ?? $this->defaultLimit;
+        $this->offset = $request->get('offset') ?? $this->defaultOffset;
+        $this->limit  = (int) $this->limit;
+        $this->offset = (int) $this->offset;
+        $this->order  = $this->order ?? $this->defaultOrder;
+
+        $counter->limit = $this->limit;
+
         if (!empty($request->get('query'))) {
-            $query = $request->get('query');
-            $elements = $repository->searchByNames($request->get('query'));
+            $query  = $request->get('query');
+            $search = $repository->searchByNames($request->get('query'), $this->order, $this->limit == 0 ? null : $this->limit, $this->offset);
+            $elements = $search['list'];
+
+            $counter->allItems  = $search['all'];
+            $counter->pageItems = $search['on_page'];
         } else {
-            //$hasAccess = $this->isGranted('ROLE_ADMIN');
-            //$this->denyAccessUnlessGranted('ROLE_ADMIN');
             $criteria = [];
-            $order = ['id' => 'asc'];
-            $limit = 20;
-            $offset = 0;
-            $elements = $repository->findBy($criteria, $order, $limit, $offset);
+            $elements = $repository->findBy($criteria, $this->order, $this->limit == 0 ? null : $this->limit, $this->offset);
+            $counter->allItems = $repository->getCount($criteria);
+            $counter->pageItems = count($elements);
         }
         return $this->baseRender('manage/users/index.html.twig', [
             'query'    => $query,
             'elements' => $elements,
+            'counter'  => $counter,
             'menu' => [
                 'pount' => 'users'
             ]
