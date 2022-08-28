@@ -2,6 +2,8 @@
 
 {% block title %}Профиль{% endblock %}
 
+{% block page_script %}<script src="js/users.js"></script>{% endblock %}
+
 {% block breadcrumb %}
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
@@ -16,6 +18,9 @@
 
     {{ form_start(form) }}
     <input name="_method" value="POST" type="hidden">
+    <input id="user_id" name="user_id" value="{{ item.id }}" type="hidden">
+    <input id="user_origin_email" name="user_origin_email" value="{{ item.email }}" type="hidden">
+
     <div class="row">
         <div class="col-md-8">
             <div class="card">
