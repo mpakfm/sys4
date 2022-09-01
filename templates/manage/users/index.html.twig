@@ -106,7 +106,33 @@
                                                 </td>
                                                 <td colspan="5">
                                                     <div class="row m-0">
-                                                        <div class="col-6"></div>
+                                                        <div class="col-1 paginator">
+                                                            {% if counter.previewPage %}
+                                                                <a href="{{ counter.previewPage.url }}"><span>Назад</span></a>
+                                                            {% endif %}
+                                                        </div>
+                                                        <div class="col-4 paginator">
+                                                            {% if counter.pages|length %}
+                                                                <p class="text-secondary mb-0">
+                                                                    Страницы:
+                                                                    {% for item in counter.pages %}
+                                                                        {% if item.url %}
+                                                                            <a href="{{ item.url }}"><span class="{% if item.current %}current-page{% endif %}">{{ item.page }}</span></a>
+                                                                        {% else %}
+                                                                            <span class="{% if item.current %}current-page{% endif %}">{{ item.page }}</span>
+                                                                        {% endif %}
+                                                                        {% if not loop.last %}
+                                                                            |
+                                                                        {% endif %}
+                                                                    {% endfor %}
+                                                                </p>
+                                                            {% endif %}
+                                                        </div>
+                                                        <div class="col-1 paginator">
+                                                            {% if counter.nextPage %}
+                                                                <a href="{{ counter.nextPage.url }}"><span>Вперёд</span></a>
+                                                            {% endif %}
+                                                        </div>
                                                         <div class="col-4 text-right">
                                                             <select id="js-on-page-selector">
                                                                 <option value="10" {% if counter.limit == 10 %}selected{% endif %}> -- 10 на страницу -- </option>

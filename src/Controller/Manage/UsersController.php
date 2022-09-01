@@ -14,7 +14,6 @@ use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use App\Response\ListCounter;
-use Mpakfm\Printu;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormErrorIterator;
 use Symfony\Component\HttpFoundation\Request;
@@ -72,8 +71,6 @@ class UsersController extends BaseController
         $this->offset = (int) $this->offset;
         $this->order  = $this->order ?? $this->defaultOrder;
 
-        $counter->limit = $this->limit;
-
         if (!empty($request->get('query'))) {
             $query  = $request->get('query');
             $search = $repository->searchByNames($request->get('query'), $this->order, $this->limit == 0 ? null : $this->limit, $this->offset);
@@ -87,6 +84,12 @@ class UsersController extends BaseController
             $counter->allItems = $repository->getCount($criteria);
             $counter->pageItems = count($elements);
         }
+
+        $counter->limit    = $this->limit;
+        $counter->offset   = $this->offset;
+
+        $counter->setPages($request);
+
         return $this->baseRender('manage/users/index.html.twig', [
             'query'    => $query,
             'elements' => $elements,
@@ -264,8 +267,6 @@ class UsersController extends BaseController
         }
         /** @var \App\Entity\User[] $result */
         $result = $repository->findBy(['email' => $request->get('email')]);
-        Printu::obj($request->get('email'))->title('email');
-        Printu::obj($result)->title('$result');
         return $this->json([
             'origin' => $request->get('email'),
             'count'  => count($result),
