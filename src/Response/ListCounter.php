@@ -9,7 +9,6 @@
 
 namespace App\Response;
 
-use Mpakfm\Printu;
 use Symfony\Component\HttpFoundation\Request;
 
 class ListCounter
@@ -52,7 +51,6 @@ class ListCounter
     public function setPages(Request $request)
     {
         $uri = str_replace($request->server->get('QUERY_STRING'), '', $request->server->get('REQUEST_URI'));
-
         $this->queryParams = $request->query->all();
 
         if (!$this->limit) {
@@ -60,30 +58,108 @@ class ListCounter
             return;
         }
 
-        $allPages = ceil($this->allItems / $this->limit);
+        $allPages          = ceil($this->allItems / $this->limit);
+        $this->currentPage = ceil($this->offset / $this->limit) + 1;
 
-        $this->currentPage = ($this->offset / $this->limit) + 1;
-
-        if ($allPages < 8) {
-            for ($p = 1; $p <= $allPages; $p++) {
-                $offset = $this->limit * ($p - 1);
+        // Если больше 4-ех страниц
+        if ($allPages > 4) {
+            $initPageMax = 1;
+            // рисуем одну.
+            for ($i = 1; $i < $initPageMax + 1; $i++) {
+                $offset = $this->limit * ($i - 1);
                 $this->pages[] = [
-                    'current' => ($this->currentPage != $p ? false : true),
-                    'page'    => $p,
-                    'url'     => ($this->currentPage != $p ? $uri . $this->makeQueryString(['limit' => $this->limit, 'offset' => $offset]) : null),
+                    'current' => ($i == $this->currentPage ? true : false),
+                    'page'    => $i,
+                    'url'     => ($this->currentPage != $i ? $uri . $this->makeQueryString(['limit' => $this->limit, 'offset' => $offset]) : null),
                 ];
             }
-        } else {
-            $startPages = 2;
-            $endPages = $allPages - 2;
-            $this->pages = [1, 2];
-            if ($this->currentPage > $startPages && $this->currentPage < $endPages) {
-                $this->pages[] = $this->currentPage - 1;
-                $this->pages[] = $this->currentPage;
-                $this->pages[] = $this->currentPage + 1;
+            // если больше 5 страниц
+            if ($allPages > 5)	{
+                // Если это не первая и не последняя страница
+                if ($this->currentPage > 1  && $this->currentPage < $allPages)	{
+                    // если страница 4 и больше то делаем отрыв
+                    if ($this->currentPage > 3) { //$page_string .= ( $on_page > 3 ) ? '<div class="page points">...</div>' : ' ';
+                        $this->pages[] = [
+                            'current' => false,
+                            'page'    => '...',
+                            'url'     => null,
+                        ];
+                    }
+                    $initPageMin = ( $this->currentPage > 2 ) ? $this->currentPage : 3;
+                    $initPageMin = ( $this->currentPage == $allPages - 1 ) ? $initPageMin - 1 : $initPageMin;
+
+                    $initPageMax = ( $this->currentPage < $allPages - 3 ) ? $this->currentPage : $allPages - 3;
+                    for ($i = $initPageMin - 1; $i < $initPageMax + 3; $i++) {
+                        $offset = $this->limit * ($i - 1);
+                        $this->pages[] = [
+                            'current' => ($i == $this->currentPage ? true : false),
+                            'page'    => $i,
+                            'url'     => ($this->currentPage != $i ? $uri . $this->makeQueryString(['limit' => $this->limit, 'offset' => $offset]) : null),
+                        ];
+                    }
+                    // если страница 4 и больше то делаем отрыв
+                    if ($this->currentPage < $allPages - 3 ) {
+                        $this->pages[] = [
+                            'current' => false,
+                            'page'    => '...',
+                            'url'     => null,
+                        ];
+                    }
+                } elseif ($this->currentPage == 1) { // Если же первая дорисуем до 4-ех
+                    $initPageMax = 4;
+                    for ($i = 2; $i < $initPageMax + 1; $i++) {
+                        $offset = $this->limit * ($i - 1);
+                        $this->pages[] = [
+                            'current' => ($i == $this->currentPage ? true : false),
+                            'page'    => $i,
+                            'url'     => ($this->currentPage != $i ? $uri . $this->makeQueryString(['limit' => $this->limit, 'offset' => $offset]) : null),
+                        ];
+                    }
+                    $this->pages[] = [
+                        'current' => false,
+                        'page'    => '...',
+                        'url'     => null,
+                    ];
+                } else { // или последняя то блок многоточия после стартовой страницы
+                    $this->pages[] = [
+                        'current' => false,
+                        'page'    => '...',
+                        'url'     => null,
+                    ];
+                }
+                // рисуем хвост из последней страницы
+                if ($this->currentPage == $allPages)	{
+                    $last = 3;
+                } else {
+                    $last = 0;
+                }
+                for ($i = ($allPages - $last); $i < $allPages + 1; $i++) {
+                    $offset = $this->limit * ($i - 1);
+                    $this->pages[] = [
+                        'current' => ($i == $this->currentPage ? true : false),
+                        'page'    => $i,
+                        'url'     => ($this->currentPage != $i ? $uri . $this->makeQueryString(['limit' => $this->limit, 'offset' => $offset]) : null),
+                    ];
+                }
+            } else {
+                for ($i = 2; $i < $allPages + 1; $i++) {
+                    $offset = $this->limit * ($i - 1);
+                    $this->pages[] = [
+                        'current' => ($i == $this->currentPage ? true : false),
+                        'page'    => $i,
+                        'url'     => ($this->currentPage != $i ? $uri . $this->makeQueryString(['limit' => $this->limit, 'offset' => $offset]) : null),
+                    ];
+                }
             }
-            $this->pages[] = $endPages - 1;
-            $this->pages[] = $endPages;
+        } else {
+            for($i = 1; $i < $allPages + 1; $i++) {
+                $offset = $this->limit * ($i - 1);
+                $this->pages[] = [
+                    'current' => ($i == $this->currentPage ? true : false),
+                    'page'    => $i,
+                    'url'     => ($this->currentPage != $i ? $uri . $this->makeQueryString(['limit' => $this->limit, 'offset' => $offset]) : null),
+                ];
+            }
         }
 
         if ($this->currentPage > 1) {
