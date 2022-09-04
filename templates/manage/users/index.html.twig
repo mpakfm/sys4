@@ -50,9 +50,21 @@
                                                 <th class="text-uppercase text-left text-secondary text-xxs font-weight-bolder opacity-7 ps-4"></th>
                                                 <th class="text-secondary opacity-7 ps-4 w-20"></th>
                                                 <th class="text-secondary opacity-7 ps-4 w-10"></th>
-                                                <th class="text-uppercase text-left text-secondary text-xxs font-weight-bolder opacity-7 ps-4">ID</th>
-                                                <th class="text-uppercase text-left text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Email</th>
-                                                <th class="text-uppercase text-left text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Имя</th>
+                                                <th class="cell-order js-order text-uppercase text-left text-secondary text-xxs font-weight-bolder opacity-7 ps-4"
+                                                    data-sort="id"
+                                                    data-order="{% if sort == 'id' and order == 'asc' %}desc{% elseif sort == 'id' and order == 'desc' %}asc{% else %}{% endif %}">
+                                                    ID
+                                                    <span><i class="fas {% if sort == 'id' and order == 'asc' %}fa-sort-up{% elseif sort == 'id' and order == 'desc' %}fa-sort-down{% else %}fa-sort{% endif %}"></i></span></th>
+                                                <th class="cell-order js-order text-uppercase text-left text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
+                                                    data-sort="email"
+                                                    data-order="{% if sort == 'email' and order == 'asc' %}desc{% elseif sort == 'id' and order == 'desc' %}asc{% else %}{% endif %}">
+                                                    Email
+                                                    <span><i class="fas {% if sort == 'email' and order == 'asc' %}fa-sort-up{% elseif sort == 'email' and order == 'desc' %}fa-sort-down{% else %}fa-sort{% endif %}"></i></span></th>
+                                                <th class="cell-order js-order text-uppercase text-left text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
+                                                    data-sort="lastName"
+                                                    data-order="{% if sort == 'lastName' and order == 'asc' %}desc{% elseif sort == 'id' and order == 'desc' %}asc{% else %}{% endif %}">
+                                                    Имя
+                                                    <span><i class="fas {% if sort == 'lastName' and order == 'asc' %}fa-sort-up{% elseif sort == 'lastName' and order == 'desc' %}fa-sort-down{% else %}fa-sort{% endif %}"></i></span></th>
                                                 <th class="text-uppercase text-left text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Роль</th>
                                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Верифицирован</th>
                                             </tr>
