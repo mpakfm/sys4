@@ -56,13 +56,10 @@ class UsersController extends BaseController
         $query   = null;
         $counter = new ListCounter();
 
+        $sort  = $request->get('sort');
         $order = $request->get('order');
-        if ($order && !empty($order)) {
-            foreach ($order as $field => $val) {
-                if (in_array($field, $this->accessOrder) && in_array($val, ['asc', 'desc'])) {
-                    $this->order[$field] = $val;
-                }
-            }
+        if ($sort && !empty($sort)) {
+            $this->order[$sort] = ($order == 'desc' ? 'desc' : 'asc');
         }
 
         $this->limit  = $request->get('limit') ?? $this->defaultLimit;
@@ -94,6 +91,8 @@ class UsersController extends BaseController
             'query'    => $query,
             'elements' => $elements,
             'counter'  => $counter,
+            'order'    => $order,
+            'sort'     => $sort,
             'menu' => [
                 'pount' => 'users'
             ]

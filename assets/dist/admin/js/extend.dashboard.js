@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function(event) {
     $('.js-select-all').click(function(){
-        let checked = $(this).prop('checked');
+        let checked    = $(this).prop('checked');
         let parentForm = $(this).parents('form');
         let checkboxes = parentForm.find('.js-select-el');
         if (checked) {
@@ -27,8 +27,38 @@ document.addEventListener("DOMContentLoaded", function(event) {
     });
     $('#js-on-page-selector').on('change', function (e) {
         var valueSelected = this.value;
-        let query = changeQueryString('limit', valueSelected);
-        window.location = query;
+        window.location   = changeQueryString('limit', valueSelected);
+    });
+    $('.js-order').click(function(){
+        let res;
+        let sort  = $(this).data('sort');
+        let order = ($(this).data('order') === 'desc' ? 'desc' : 'asc');
+        let query = window.location.href;
+        if (query.indexOf('?') < 0) {
+            query += '?';
+        }
+        if (query.indexOf('sort') < 0) {
+            res = query + '&sort=' + sort + '&order=' + order;
+        } else {
+            str     = /sort=(\w+)/;
+            replace = `sort=${sort}`;
+            query   = query.replace(str, replace);
+            str     = /order=(\w+)/;
+            replace = `order=${order}`;
+            res     = query.replace(str, replace);
+        }
+        let parent = $(this).parents('tr');
+        $(parent).find('i.fas').attr('class', 'fas fa-sort');
+        if (order === 'desc') {
+            $(this).data('order', 'desc');
+            $(this).attr('data-order', 'desc');
+            $(this).find('i').attr('class', 'fas fa-sort-down');
+        } else {
+            $(this).data('order', 'asc');
+            $(this).attr('data-order', 'asc');
+            $(this).find('i').attr('class', 'fas fa-sort-up');
+        }
+        window.location = res;
     });
 });
 
