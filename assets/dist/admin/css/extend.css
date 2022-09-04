@@ -1,3 +1,19 @@
 .text-right {
     text-align: right!important;
 }
+.paginator a{
+    text-decoration: underline;
+}
+.paginator .current-page {
+    color: #0da5c0;
+    font-weight: bold;
+}
+th.cell-order {
+    position: relative;
+}
+th.cell-order span {
+    position: absolute;
+    right: 5px;
+    cursor: pointer;
+    width: 10%;
+}
