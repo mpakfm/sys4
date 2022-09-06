@@ -9,6 +9,7 @@
 
 namespace App\Response;
 
+use Mpakfm\Printu;
 use Symfony\Component\HttpFoundation\Request;
 
 class ListCounter
@@ -51,6 +52,9 @@ class ListCounter
     public function setPages(Request $request)
     {
         $uri = str_replace($request->server->get('QUERY_STRING'), '', $request->server->get('REQUEST_URI'));
+        if (strpos($uri,'?') === false) {
+            $uri = $uri . '?';
+        }
         $this->queryParams = $request->query->all();
 
         if (!$this->limit) {

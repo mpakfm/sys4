@@ -1,12 +1,26 @@
 .text-right {
     text-align: right!important;
 }
+.select-action-all {
+    display: inline-flex;
+}
+.select-action-all div {
+    margin-top: 2px;
+}
+.select-action-all select {
+    width: 130px;
+    padding: 1px 10px 1px 10px;
+}
 .paginator a{
     text-decoration: underline;
 }
 .paginator .current-page {
     color: #0da5c0;
     font-weight: bold;
+}
+.on-page-selector {
+    width: 70%;
+    padding: 1px 10px 1px 10px;
 }
 th.cell-order {
     position: relative;

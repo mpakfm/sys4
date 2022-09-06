@@ -5,7 +5,6 @@ namespace App\Repository;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Mpakfm\Printu;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
@@ -83,6 +82,20 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $all;
     }
 
+    public function deleteBulk(array $ids)
+    {
+        if (empty($ids)) {
+            return;
+        }
+        $conn   = $this->getEntityManager()->getConnection();
+        $sqlAll = "
+            DELETE FROM user
+            WHERE id IN (" . implode(', ', $ids) . ")
+            ";
+        $stmtAll   = $conn->prepare($sqlAll);
+        $stmtAll->executeQuery();
+    }
+
     public function searchByNames(string $query, array $orderBy = null, $limit = null, $offset = null)
     {
         $conn = $this->getEntityManager()->getConnection();
@@ -94,8 +107,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $stmtAll   = $conn->prepare($sqlAll);
         $resultAll = $stmtAll->executeQuery();
         $all       = $resultAll->rowCount();
-
-        Printu::obj($all)->title('$all');
 
         $order = '';
         if (!empty($orderBy)) {
@@ -118,11 +129,10 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             WHERE u.email LIKE ('%{$query}%') OR u.name LIKE ('%{$query}%') OR u.last_name LIKE ('%{$query}%')
             {$order} {$counter}
             ";
-        Printu::obj($sql)->title('$sql');
-        $stmt = $conn->prepare($sql);
+        $stmt      = $conn->prepare($sql);
         $resultSet = $stmt->executeQuery();
         $onPage    = $resultSet->rowCount();
-        Printu::obj($onPage)->title('$onPage');
+
         $result = [];
         while ($item = $resultSet->fetchAssociative()) {
             $user = new User();
