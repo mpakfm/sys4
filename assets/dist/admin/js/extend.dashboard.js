@@ -1,12 +1,29 @@
 document.addEventListener("DOMContentLoaded", function(event) {
     $('.js-select-all').click(function(){
+        let selectType = $('#js-select-all-type').val();
         let checked    = $(this).prop('checked');
         let parentForm = $(this).parents('form');
         let checkboxes = parentForm.find('.js-select-el');
+        if (selectType == 'all') {
         if (checked) {
             checkboxes.prop('checked', true);
         } else {
             checkboxes.prop('checked', false);
+        }
+        } else if (selectType == 'invert') {
+            for (var i = 0; i < checkboxes.length; i++) {
+                let item = $(checkboxes)[i];
+                if ($(item).prop('checked')) {
+                    $(item).prop('checked', false);
+                } else {
+                    $(item).prop('checked', true);
+                }
+            }
+        }
+    });
+    $('#js-select-all-action').on('change', function(event){
+        if ($(this).val() === 'delete') {
+            deleteSelected(event);
         }
     });
     $('.js-delete-el').click(function(){
@@ -86,4 +103,35 @@ function changeQueryString(param, value) {
         res = query.replace(str, replace);
     }
     return res;
+}
+
+function deleteSelected(event) {
+    let result = confirm('Точно всё выбранное удалить?');
+    if (!result) {
+        setTimeout(function () {
+            $('#js-select-all-action option:selected').each(function(){
+                this.selected=false;
+            });
+            $('#js-select-all-action option[value="no"]').attr('selected','selected');
+        }, 100);
+        return false;
+    }
+    let parentForm = $('#js-select-all-action').parents('form');
+    let checkboxes = parentForm.find('.js-select-el');
+    let ids = [];
+    for (var i = 0; i < checkboxes.length; i++) {
+        let item = $(checkboxes)[i];
+        if ($(item).prop('checked')) {
+            ids.push($(item).data('id'));
+        }
+    }
+    let url = $('#js-select-all-action option[value="delete"]').data('url');
+    $.ajax({
+        url: url,
+        method: 'post',
+        dataType: 'json',
+        data: {ids: ids},
+        success: (data) => { window.location.reload(); },
+        error: (data) => { console.log('error data', data) }
+    });
 }

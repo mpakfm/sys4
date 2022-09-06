@@ -69,8 +69,8 @@ class UsersController extends BaseController
         $this->order  = $this->order ?? $this->defaultOrder;
 
         if (!empty($request->get('query'))) {
-            $query  = $request->get('query');
-            $search = $repository->searchByNames($request->get('query'), $this->order, $this->limit == 0 ? null : $this->limit, $this->offset);
+            $query    = $request->get('query');
+            $search   = $repository->searchByNames($request->get('query'), $this->order, $this->limit == 0 ? null : $this->limit, $this->offset);
             $elements = $search['list'];
 
             $counter->allItems  = $search['all'];
@@ -78,12 +78,13 @@ class UsersController extends BaseController
         } else {
             $criteria = [];
             $elements = $repository->findBy($criteria, $this->order, $this->limit == 0 ? null : $this->limit, $this->offset);
-            $counter->allItems = $repository->getCount($criteria);
+
+            $counter->allItems  = $repository->getCount($criteria);
             $counter->pageItems = count($elements);
         }
 
-        $counter->limit    = $this->limit;
-        $counter->offset   = $this->offset;
+        $counter->limit  = $this->limit;
+        $counter->offset = $this->offset;
 
         $counter->setPages($request);
 
@@ -139,9 +140,9 @@ class UsersController extends BaseController
             'menu' => [
                 'pount' => 'users'
             ],
-            'errors'  => $errors,
-            'item'    => $user,
-            'form'    => $form,
+            'errors' => $errors,
+            'item'   => $user,
+            'form'   => $form,
         ]);
     }
 
@@ -254,6 +255,21 @@ class UsersController extends BaseController
         }
         $repository->remove($user, true);
         return $this->redirectToRoute('app_manage_user_list');
+    }
+
+    /**
+     * @Route("/manage/user/delete_bulk", name="app_manage_user_delete_bulk", methods={"POST"})
+     */
+    public function deleteBulk(Request $request, UserRepository $repository)
+    {
+        if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
+            throw new AccessDeniedException('Access Denied.');
+        }
+        $ids = $request->request->get('ids');
+        $repository->deleteBulk($ids);
+        return $this->json([
+            'count'  => count($ids),
+        ]);
     }
 
     /**
