@@ -1,3 +1,16 @@
+.navbar-main {
+    position: relative;
+    height: 50px;
+}
+.navbar-container {
+    position: absolute;
+    top: 0px !important;
+    left: -15px;
+}
+ol.breadcrumb {
+    background-color: white;
+    color: #344767;
+}
 .text-right {
     text-align: right!important;
 }
