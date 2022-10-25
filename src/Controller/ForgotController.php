@@ -55,7 +55,7 @@ class ForgotController extends BaseController
                     ->html('<p>Ваш новый пароль: ' . $newPass . '</p>');
 
                 if ($_ENV['APP_ENV'] == 'dev') {
-                    Printu::info($newPass)->title('$newPass for ' . $user->getEmail());
+                    Printu::info($newPass)->title('$newPass for ' . $user->getEmail())->file('login');
                 }
 
                 $mailer->send($email);
