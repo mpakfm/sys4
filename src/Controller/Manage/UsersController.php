@@ -9,12 +9,10 @@
 
 namespace App\Controller\Manage;
 
-use App\Controller\BaseController;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use App\Response\ListCounter;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormErrorIterator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,7 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class UsersController extends BaseController
+class UsersController extends AdminController
 {
     /** @var int */
     public $defaultLimit = 20;

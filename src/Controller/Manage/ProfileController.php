@@ -2,7 +2,6 @@
 
 namespace App\Controller\Manage;
 
-use App\Controller\BaseController;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use Mpakfm\Printu;
@@ -12,11 +11,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class ProfileController extends BaseController
+class ProfileController extends AdminController
 {
     /**
      * @Route("/manage/profile", name="app_manage_profile")

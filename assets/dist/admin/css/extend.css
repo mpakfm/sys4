@@ -2,6 +2,9 @@
     position: relative;
     height: 50px;
 }
+a.navbar-brand {
+    display: table-cell !important;
+}
 .navbar-container {
     position: absolute;
     top: 0px !important;

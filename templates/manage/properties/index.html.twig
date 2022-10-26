@@ -1,0 +1,79 @@
+{% extends 'manage/base.html.twig' %}
+
+{% block title %}Профиль{% endblock %}
+
+{% block page_script %}<script src="js/users.js"></script>{% endblock %}
+
+{% block breadcrumb %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb  mb-0 pb-1 pt-1 me-sm-6 me-5">
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 " href="/manage/">Панель</a></li>
+            <li class="breadcrumb-item text-sm active" aria-current="page">Свойства</li>
+        </ol>
+    </nav>
+{% endblock %}
+
+{% block body %}
+
+    {{ form_start(form) }}
+    <input name="_method" value="POST" type="hidden">
+    <input id="item_id" name="item_id" value="{{ item.id }}" type="hidden">
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header pb-0">
+                    <div class="d-flex align-items-center">
+                        <p class="mb-0">Основные свойства сайта</p>
+                        <button type="submit" class="btn btn-primary btn-sm ms-auto">Сохранить</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="text-uppercase text-sm">META поля</p>
+
+                    {{ form_errors(form) }}
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="properties_site_email" class="form-control-label">Email администратора сайта (отправитель по умолчанию):</label>
+                                <input id="properties_site_email" class="form-control" type="email" name="properties[site_email]" {% if item.siteEmail is not empty %}value="{{ item.siteEmail }}" {% endif %}>
+                                {{ form_errors(form.site_email, {'attr': {'class': 'form-input'}}) }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="properties_meta_title" class="form-control-label">META Title</label>
+                                <input id="properties_meta_title" class="form-control " type="text" name="properties[meta_title]" {% if item.metaTitle is not empty %}value="{{ item.metaTitle }}" {% endif %}>
+                                {{ form_errors(form.meta_title) }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="properties_meta_keywords" class="form-control-label">META Keywords</label>
+                                <input id="properties_meta_keywords" class="form-control" type="text" name="properties[meta_keywords]" {% if item.metaKeywords is not empty %}value="{{ item.metaKeywords }}" {% endif %}>
+                                {{ form_errors(form.meta_keywords) }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="properties_meta_description" class="form-control-label">META Description</label>
+                                <input id="properties_meta_description" class="form-control " type="text" name="properties[meta_description]" {% if item.metaDescription is not empty %}value="{{ item.metaDescription }}" {% endif %}>
+                                {{ form_errors(form.meta_description) }}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card card-profile">
+
+            </div>
+        </div>
+    </div>
+    </form>
+
+{% endblock %}
