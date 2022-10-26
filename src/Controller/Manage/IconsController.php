@@ -9,12 +9,11 @@
 
 namespace App\Controller\Manage;
 
-use App\Controller\BaseController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class IconsController extends BaseController
+class IconsController extends AdminController
 {
     /**
      * @Route("/manage/icons", name="app_manage_icons")
@@ -22,8 +21,6 @@ class IconsController extends BaseController
     public function index(Request $request): Response
     {
         $this->preLoad($request);
-        //$hasAccess = $this->isGranted('ROLE_ADMIN');
-        //$this->denyAccessUnlessGranted('ROLE_ADMIN');
         return $this->baseRender('manage/icons/index.html.twig', [
             'controller_name' => 'IndexController',
             'menu' => [
