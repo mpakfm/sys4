@@ -3,18 +3,14 @@
 namespace App\Controller;
 
 use App\Repository\PropertiesRepository;
-use App\Repository\StatClientConnectionsRepository;
-use Mpakfm\Printu;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 
-class IndexController extends BaseController
+class SpecialPageController extends BaseController
 {
     /**
-     * @Route("/", name="app_index")
+     * @Route("/special", name="app_special_page")
      */
     public function index(Request $request, PropertiesRepository $propsRepository): Response
     {
@@ -28,9 +24,9 @@ class IndexController extends BaseController
             $meta['keywords']    = $props[0]->getMetaTitle() ?? $props[0]->getMetaKeywords();
         }
 
-        return $this->baseRender('index/index.html.twig', [
+        return $this->baseRender('special_page/index.html.twig', [
             'meta' => $meta,
-            'controller_name' => 'IndexController',
+            'controller_name' => 'SpecialPageController',
         ]);
     }
 }

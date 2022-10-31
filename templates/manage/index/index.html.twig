@@ -30,18 +30,18 @@
             </div>
         </div>
         <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-            <div class="card">
+            <div class="panel-top card">
                 <div class="card-body p-3">
                     <div class="row">
                         <div class="col-8">
                             <div class="numbers">
-                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Today's Users</p>
+                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Пользователи Онлайн</p>
                                 <h5 class="font-weight-bolder">
-                                    2,300
+                                    {{ online|length }}
                                 </h5>
                                 <p class="mb-0">
                                     <span class="text-success text-sm font-weight-bolder">+3%</span>
-                                    since last week
+                                    от средней
                                 </p>
                             </div>
                         </div>
@@ -100,6 +100,69 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-lg-7 mb-lg-0 mb-4">
+            <div class="card z-index-2 h-100">
+                <div class="card-header pb-0 pt-3 bg-transparent">
+                    <h6 class="text-capitalize">Онлайн пользователи</h6>
+                    <p class="text-sm mb-0">
+                        <i class="fa fa-arrow-up text-success"></i>
+                        <span class="font-weight-bold">4% more</span> in 2021
+                    </p>
+                </div>
+                <div class="card-body p-3">
+                    <table class="table align-items-center ">
+                        <thead>
+                        <th>Пользователь</th>
+                        <th>Хитов</th>
+                        <th class="text-right">Последнй</th>
+                        </thead>
+                        <tbody>
+                        {% for line in online %}
+                        <tr>
+                            <td>
+                                <h6>
+                                    {% if line.user_id %}
+                                        <a href="/manage/user/edit/{{ line.user_id }}">{{ line.email }}</a>
+                                    {% else %}
+                                        Аноним
+                                    {% endif %}
+                                </h6>
+                                <span class="text-xs">{{ line.user_agent }}</span>
+                            </td>
+                            <td class="text-center">{{ line.cnt }}</td>
+                            <td class="text-right">{{ line.dt|date('H:i:s') }}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card">
+                <div class="card-header pb-0 pt-3 bg-transparent">
+                    <h6 class="text-capitalize">Популярные страницы</h6>
+                    <p class="text-sm mb-0">
+                        <i class="fa fa-arrow-up text-success"></i>
+                        <span class="font-weight-bold">4% more</span> in 2021
+                    </p>
+                </div>
+                <div class="card-body p-3">
+                    <table class="table align-items-center ">
+                        <tbody>
+                        {% for line in pages %}
+                        <tr>
+                            <td><a href="{{ line.page }}">{% if line.page == '/' %}Главная{% else %}{{ line.page }}{% endif %}</a></td>
+                            <td>{{ line.cnt }}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

@@ -40,6 +40,7 @@ class ListCounter
         foreach ($fields as $key => $val) {
             $result[] = "{$key}={$fields[$key]}";
         }
+        Printu::info($this->queryParams)->title('[makeQueryString] $this->queryParams');
         foreach ($this->queryParams as $key => $val) {
             if (array_key_exists($key, $fields)) {
                 continue;
