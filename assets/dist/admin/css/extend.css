@@ -47,3 +47,6 @@ th.cell-order span {
     cursor: pointer;
     width: 10%;
 }
+.panel-top.card:hover {
+    background-color: #c5e9ef;
+}

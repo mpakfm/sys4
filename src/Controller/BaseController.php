@@ -13,6 +13,7 @@ use Mpakfm\Printu;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -33,12 +34,28 @@ class BaseController extends AbstractController
      */
     public $canonical;
 
+    protected $cookie;
+
     public function __construct()
     {
     }
 
     public function preLoad(Request $request)
     {
+        // cookie
+        $cookie = $request->cookies->get('client');
+        if (!$cookie) {
+            $cookie = 'CI-' . time() . '-' . md5($request->headers->get('User-Agent'));
+            $this->cookie = new Cookie(
+                'client', $cookie, strtotime('tomorrow'), '/',
+                $request->server->get('SERVER_NAME'), false, true
+            );
+        } else {
+            $this->cookie = new Cookie(
+                'client', $cookie, strtotime('tomorrow'), '/',
+                $request->server->get('SERVER_NAME'), false, true
+            );
+        }
         $this->canonical =
             ($request->server->get('REQUEST_SCHEME') == 'https' ||
             $request->server->get('SERVER_PORT') != 80 ? 'https' : 'http') .
@@ -92,6 +109,9 @@ class BaseController extends AbstractController
         }
         if (null === $response) {
             $response = new Response();
+        }
+        if ($this->cookie) {
+            $response->headers->setCookie($this->cookie);
         }
         if ($this->isCached && $this->cacheTime) {
             $response->setSharedMaxAge($this->cacheTime);
