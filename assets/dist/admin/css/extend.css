@@ -50,3 +50,35 @@ th.cell-order span {
 .panel-top.card:hover {
     background-color: #c5e9ef;
 }
+#list-filter {
+    position: absolute;
+    left: 6px;
+    top: 100px;
+    z-index: 1000;
+    display: none;
+}
+#list-filter .card {
+    background-color: #97A6ED;
+}
+#list-filter label {
+    color: white;
+}
+#list-filter-close {
+    position: absolute;
+    right: 30px;
+    top: 2px;
+    cursor: pointer;
+}
+#list-filter-close i {
+    color: white;
+}
+#query-delete {
+    position: absolute;
+    top: 63px;
+    right: 30px;
+    cursor: pointer;
+    display: none;
+}
+#query-delete i {
+    color: #999999;
+}

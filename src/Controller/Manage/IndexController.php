@@ -10,6 +10,7 @@
 namespace App\Controller\Manage;
 
 use App\Repository\StatClientConnectionsRepository;
+use App\Service\ContentManager;
 use Mpakfm\Printu;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,9 +21,9 @@ class IndexController extends AdminController
     /**
      * @Route("/manage", name="app_manage_index")
      */
-    public function index(Request $request, StatClientConnectionsRepository $connectionsRepository): Response
+    public function index(Request $request, StatClientConnectionsRepository $connectionsRepository, ContentManager $contentManager): Response
     {
-        $this->preLoad($request);
+        $this->preLoad($request, $contentManager);
         //$this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $online = $connectionsRepository->getOnline();

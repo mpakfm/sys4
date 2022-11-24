@@ -1,0 +1,99 @@
+{% extends 'manage/base.html.twig' %}
+
+{% block title %}Новый блок контента{% endblock %}
+
+{% block page_script %}{% endblock %}
+
+{% block breadcrumb %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb  mb-0 pb-1 pt-1 me-sm-6 me-5">
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 " href="/manage/">Панель</a></li>
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 " href="/manage/content/block">Контент. Блоки.</a></li>
+            <li class="breadcrumb-item text-sm active" aria-current="page">Новый блок</li>
+        </ol>
+    </nav>
+{% endblock %}
+
+{% block body %}
+    {{ form_start(form) }}
+    <input name="_method" value="POST" type="hidden">
+    {% if item.id %}
+        <input id="item_id" name="item_id" value="{{ item.id }}" type="hidden">
+    {% else %}
+        <input id="item_id" name="item_id" value="" type="hidden">
+    {% endif %}
+    <input id="content_user_create" name="content[user_create]" value="{{ user.id }}" type="hidden">
+    <input id="content_user_update" name="content[user_update]" value="{{ user.id }}" type="hidden">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header pb-0">
+                    <div class="d-flex align-items-center">
+                        <p class="mb-0">Новый блок</p>
+                        <button type="submit" class="btn btn-primary btn-sm ms-auto">Сохранить</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="text-uppercase text-sm">Свойства</p>
+
+                    {{ form_errors(form) }}
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="content_name" class="form-control-label">Название</label>
+                                <input id="content_name" class="form-control" type="text" name="content[name]" value="{{ item.name }}">
+                                {{ form_errors(form.name, {'attr': {'class': 'form-input'}}) }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group form-check form-check-info">
+                                <label for="content_active" class="form-control-label ">Активность</label>
+                                <input id="content_active" type="checkbox" class="form-check-input " name="content[active]" value="1" checked>
+                                {{ form_errors(form.active) }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="content_code" class="form-control-label">Код</label>
+                                <input id="content_code" class="form-control " type="text" name="content[code]" value="{{ item.code }}">
+                                {{ form_errors(form.code) }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="content_sort" class="form-control-label">Сортировка</label>
+                                <input id="content_sort" class="form-control " type="text" name="content[sort]" value="{{ item.sort ? item.sort : '500' }}">
+                                {{ form_errors(form.sort) }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="content_meta_title_section" class="form-control-label">Раздел. Meta Title</label>
+                                <input id="content_meta_title_section" class="form-control " type="text" name="content[meta_title_section]" value="{{ item.metaTitleSection }}">
+                                {{ form_errors(form.meta_title_section) }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="content_meta_title_element" class="form-control-label">Элемент. Meta Title</label>
+                                <input id="content_meta_title_element" class="form-control " type="text" name="content[meta_title_element]" value="{{ item.metaTitleElement }}">
+                                {{ form_errors(form.meta_title_element) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+
+{% endblock %}
+
+{%- block form_errors -%}
+    {%- if errors|length > 0 -%}
+        {%- for error in errors -%}
+            <div class="alert alert-danger">{{ error.message }}</div>
+        {%- endfor -%}
+    {%- endif -%}
+{%- endblock form_errors -%}

@@ -1,3 +1,38 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+
+app_manage_statistic:
+  path:       /manage/statistic
+  controller: App\Controller\Manage\StatisticController::index
+  methods:    GET
+
+app_manage_statistic_delete:
+  path:       /manage/statistic/delete/{id}
+  controller: App\Controller\Manage\StatisticController::delete
+  methods:    GET
+
+app_manage_statistic_delete_bulk:
+  path:       /manage/statistic/delete_bulk
+  controller: App\Controller\Manage\StatisticController::deleteBulk
+  methods:    POST
+
+app_manage_content_block:
+  path:       /manage/content/block
+  controller: App\Controller\Manage\ContentBlockController::index
+  methods:    GET
+
+app_manage_content_block_create:
+  path:       /manage/content/block/create
+  controller: App\Controller\Manage\ContentBlockController::create
+  methods:    GET|POST
+
+app_manage_content_block_delete:
+  path:       /manage/content/block/delete/{id}
+  controller: App\Controller\Manage\ContentBlockController::delete
+  methods:    GET
+
+app_manage_content_block_delete_bulk:
+  path:       /manage/content/block/delete_bulk
+  controller: App\Controller\Manage\ContentBlockController::deleteBulk
+  methods:    POST

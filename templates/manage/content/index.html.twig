@@ -1,6 +1,6 @@
 {% extends 'manage/base.html.twig' %}
 
-{% block title %}Статистика. Список посещений.{% endblock %}
+{% block title %}Контент. Блоки.{% endblock %}
 {% block page_script %}
     <script src="js/list.dashboard.js"></script>
 {% endblock %}
@@ -9,7 +9,7 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb  mb-0 pb-1 pt-1 me-sm-6 me-5">
             <li class="breadcrumb-item text-sm"><a class="opacity-5 " href="/manage/">Панель</a></li>
-            <li class="breadcrumb-item text-sm active" aria-current="page">Статистика. Список посещений.</li>
+            <li class="breadcrumb-item text-sm active" aria-current="page">Контент. Блоки.</li>
         </ol>
     </nav>
 {% endblock %}
@@ -30,6 +30,30 @@
                             <div id="list-filter" class="container max-width-500 body-left">
                                 <div class="card">
                                     <div class="card-body">
+                                        {% for key, item in fields %}
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label for="filter_{{ key }}" class="form-control-label">{{ key }}</label>
+                                                        <input id="filter_{{ key }}" class="form-control" type="text" name="{{ key }}" value="{{ attribute(filter, key) is defined ? attribute(filter, key) : '' }}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                        <div class="row">
+                                            <div class="col col-md-4 align-self-start">
+                                                <div class="form-group">
+                                                    <input class="form-control max-width-100" type="reset" value="Очистить">
+                                                </div>
+                                            </div>
+                                            <div class="col col-md-5"></div>
+                                            <div class="col col-md-3 align-self-end">
+                                                <div class="form-group">
+                                                    <input class="form-control max-width-100" type="submit" value="Найти">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {#
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="form-group">
@@ -72,19 +96,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <div class="col col-md-4 align-self-start">
-                                                <div class="form-group">
-                                                    <input class="form-control max-width-100" type="reset" value="Очистить">
-                                                </div>
-                                            </div>
-                                            <div class="col col-md-5"></div>
-                                            <div class="col col-md-3 align-self-end">
-                                                <div class="form-group">
-                                                    <input class="form-control max-width-100" type="submit" value="Найти">
-                                                </div>
-                                            </div>
-                                        </div>
+                                        #}
                                     </div>
                                 </div>
                                 <div id="list-filter-close"><i class="far fa-times-circle"></i></div>
@@ -92,13 +104,17 @@
                         </div>
                     </form>
                 </div>
+
                 {# таблица со списком элементов #}
                 <div class="row">
                     <div class="col-12">
                         <div class="card mb-4">
                             <div class="row">
-                                <div class="card-header pb-0 col-12">
-                                    <h6>Список посещений</h6>
+                                <div class="card-header pb-0 col-10">
+                                    <h6>Блоки с контентом</h6>
+                                </div>
+                                <div class="card-header col-2">
+                                    <a href="/manage/content/block/create"><button type="button" class="btn btn-info btn-sm mb-0">Создать</button></a>
                                 </div>
                             </div>
                             <div class="card">
@@ -107,9 +123,9 @@
                                         <table class="table align-items-center mb-0 js-list">
                                             <thead>
                                             <tr>
-                                                <th class="text-uppercase text-left text-secondary text-xxs font-weight-bolder opacity-7 ps-4 w-1"></th>
-                                                <th class="text-secondary opacity-7 ps-4 w-10"></th>
-                                                <th class="text-secondary opacity-7 ps-4 w-1"></th>
+                                                <th class="opacity-7 ps-2 w-1"></th>
+                                                <th class="opacity-7 ps-2 w-10"></th>
+                                                <th class="opacity-7 ps-2 w-1"></th>
                                                 <th class="cell-order js-order text-uppercase text-left text-secondary text-xxs font-weight-bolder opacity-7 ps-4"
                                                     data-sort="id"
                                                     data-order="{% if sort == 'id' and order == 'asc' %}desc{% elseif sort == 'id' and order == 'desc' %}asc{% else %}{% endif %}">
@@ -117,64 +133,65 @@
                                                     <span><i class="fas {% if sort == 'id' and order == 'asc' %}fa-sort-up{% elseif sort == 'id' and order == 'desc' %}fa-sort-down{% else %}fa-sort{% endif %}"></i></span>
                                                 </th>
                                                 <th class="cell-order js-order text-uppercase text-left text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
-                                                    data-sort="client_id"
-                                                    data-order="{% if sort == 'client_id' and order == 'asc' %}desc{% elseif sort == 'id' and order == 'desc' %}asc{% else %}{% endif %}">
-                                                    client_id
-                                                    <span><i class="fas {% if sort == 'client_id' and order == 'asc' %}fa-sort-up{% elseif sort == 'client_id' and order == 'desc' %}fa-sort-down{% else %}fa-sort{% endif %}"></i></span>
+                                                    data-sort="name"
+                                                    data-order="{% if sort == 'name' and order == 'asc' %}desc{% elseif sort == 'name' and order == 'desc' %}asc{% else %}{% endif %}">
+                                                    name
+                                                    <span><i class="fas {% if sort == 'name' and order == 'asc' %}fa-sort-up{% elseif sort == 'name' and order == 'desc' %}fa-sort-down{% else %}fa-sort{% endif %}"></i></span>
                                                 </th>
                                                 <th class="cell-order js-order text-uppercase text-left text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
-                                                    data-sort="user_id"
-                                                    data-order="{% if sort == 'user_id' and order == 'asc' %}desc{% elseif sort == 'id' and order == 'desc' %}asc{% else %}{% endif %}">
-                                                    user_id
-                                                    <span><i class="fas {% if sort == 'user_id' and order == 'asc' %}fa-sort-up{% elseif sort == 'user_id' and order == 'desc' %}fa-sort-down{% else %}fa-sort{% endif %}"></i></span>
+                                                    data-sort="code"
+                                                    data-order="{% if sort == 'code' and order == 'asc' %}desc{% elseif sort == 'code' and order == 'desc' %}asc{% else %}{% endif %}">
+                                                    code
+                                                    <span><i class="fas {% if sort == 'code' and order == 'asc' %}fa-sort-up{% elseif sort == 'code' and order == 'desc' %}fa-sort-down{% else %}fa-sort{% endif %}"></i></span>
                                                 </th>
                                                 <th class="cell-order js-order text-uppercase text-left text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
-                                                    data-sort="date_time"
-                                                    data-order="{% if sort == 'date_time' and order == 'asc' %}desc{% elseif sort == 'date_time' and order == 'desc' %}asc{% else %}{% endif %}">
-                                                    date_time
-                                                    <span><i class="fas {% if sort == 'date_time' and order == 'asc' %}fa-sort-up{% elseif sort == 'date_time' and order == 'desc' %}fa-sort-down{% else %}fa-sort{% endif %}"></i></span>
+                                                    data-sort="dt_create"
+                                                    data-order="{% if sort == 'dt_create' and order == 'asc' %}desc{% elseif sort == 'dt_create' and order == 'desc' %}asc{% else %}{% endif %}">
+                                                    dt_create
+                                                    <span><i class="fas {% if sort == 'dt_create' and order == 'asc' %}fa-sort-up{% elseif sort == 'dt_create' and order == 'desc' %}fa-sort-down{% else %}fa-sort{% endif %}"></i></span>
                                                 </th>
                                                 <th class="cell-order js-order text-uppercase text-left text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
-                                                    data-sort="remote_addr"
-                                                    data-order="{% if sort == 'remote_addr' and order == 'asc' %}desc{% elseif sort == 'remote_addr' and order == 'desc' %}asc{% else %}{% endif %}">
-                                                    remote_addr
-                                                    <span><i class="fas {% if sort == 'remote_addr' and order == 'asc' %}fa-sort-up{% elseif sort == 'remote_addr' and order == 'desc' %}fa-sort-down{% else %}fa-sort{% endif %}"></i></span>
+                                                    data-sort="dt_update"
+                                                    data-order="{% if sort == 'dt_update' and order == 'asc' %}desc{% elseif sort == 'dt_update' and order == 'desc' %}asc{% else %}{% endif %}">
+                                                    dt_update
+                                                    <span><i class="fas {% if sort == 'dt_update' and order == 'asc' %}fa-sort-up{% elseif sort == 'dt_update' and order == 'desc' %}fa-sort-down{% else %}fa-sort{% endif %}"></i></span>
                                                 </th>
                                                 <th class="cell-order js-order text-uppercase text-left text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
-                                                    data-sort="user_agent"
-                                                    data-order="{% if sort == 'user_agent' and order == 'asc' %}desc{% elseif sort == 'user_agent' and order == 'desc' %}asc{% else %}{% endif %}">
-                                                    user_agent
-                                                    <span><i class="fas {% if sort == 'user_agent' and order == 'asc' %}fa-sort-up{% elseif sort == 'user_agent' and order == 'desc' %}fa-sort-down{% else %}fa-sort{% endif %}"></i></span>
+                                                    data-sort="user_create"
+                                                    data-order="{% if sort == 'user_create' and order == 'asc' %}desc{% elseif sort == 'user_create' and order == 'desc' %}asc{% else %}{% endif %}">
+                                                    user_create
+                                                    <span><i class="fas {% if sort == 'user_create' and order == 'asc' %}fa-sort-up{% elseif sort == 'user_create' and order == 'desc' %}fa-sort-down{% else %}fa-sort{% endif %}"></i></span>
                                                 </th>
                                                 <th class="cell-order js-order text-uppercase text-left text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
-                                                    data-sort="url"
-                                                    data-order="{% if sort == 'url' and order == 'asc' %}desc{% elseif sort == 'url' and order == 'desc' %}asc{% else %}{% endif %}">
-                                                    url
-                                                    <span><i class="fas {% if sort == 'url' and order == 'asc' %}fa-sort-up{% elseif sort == 'url' and order == 'desc' %}fa-sort-down{% else %}fa-sort{% endif %}"></i></span>
+                                                    data-sort="user_update"
+                                                    data-order="{% if sort == 'user_update' and order == 'asc' %}desc{% elseif sort == 'user_update' and order == 'desc' %}asc{% else %}{% endif %}">
+                                                    user_update
+                                                    <span><i class="fas {% if sort == 'user_update' and order == 'asc' %}fa-sort-up{% elseif sort == 'user_update' and order == 'desc' %}fa-sort-down{% else %}fa-sort{% endif %}"></i></span>
                                                 </th>
                                                 <th class="cell-order js-order text-uppercase text-left text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
-                                                    data-sort="page"
-                                                    data-order="{% if sort == 'page' and order == 'asc' %}desc{% elseif sort == 'page' and order == 'desc' %}asc{% else %}{% endif %}">
-                                                    page
-                                                    <span><i class="fas {% if sort == 'page' and order == 'asc' %}fa-sort-up{% elseif sort == 'page' and order == 'desc' %}fa-sort-down{% else %}fa-sort{% endif %}"></i></span>
+                                                    data-sort="active"
+                                                    data-order="{% if sort == 'active' and order == 'asc' %}desc{% elseif sort == 'active' and order == 'desc' %}asc{% else %}{% endif %}">
+                                                    active
+                                                    <span><i class="fas {% if sort == 'active' and order == 'asc' %}fa-sort-up{% elseif sort == 'active' and order == 'desc' %}fa-sort-down{% else %}fa-sort{% endif %}"></i></span>
                                                 </th>
-                                                <th class="cell-order js-order text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
-                                                    data-sort="ping"
-                                                    data-order="{% if sort == 'ping' and order == 'asc' %}desc{% elseif sort == 'ping' and order == 'desc' %}asc{% else %}{% endif %}">
-                                                    ping
-                                                    <span><i class="fas {% if sort == 'ping' and order == 'asc' %}fa-sort-up{% elseif sort == 'ping' and order == 'desc' %}fa-sort-down{% else %}fa-sort{% endif %}"></i></span>
+                                                <th class="cell-order js-order text-uppercase text-left text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
+                                                    data-sort="sort"
+                                                    data-order="{% if sort == 'sort' and order == 'asc' %}desc{% elseif sort == 'sort' and order == 'desc' %}asc{% else %}{% endif %}">
+                                                    sort
+                                                    <span><i class="fas {% if sort == 'sort' and order == 'asc' %}fa-sort-up{% elseif sort == 'sort' and order == 'desc' %}fa-sort-down{% else %}fa-sort{% endif %}"></i></span>
                                                 </th>
                                             </tr>
                                             </thead>
                                             <tbody>
+                                            {% if elements|length > 0 %}
                                             {% for item in elements %}
                                                 <tr data-id="{{ item.id }}">
                                                     <td class="align-middle">
                                                         <span class="text-xs text-secondary mb-0">#{{ loop.index }}</span>
                                                     </td>
                                                     <td class="align-middle">
-                                                        <button type="button" class="btn btn-danger btn-sm mb-0 js-delete-el" data-link="/manage/statistic/delete/" data-id="{{ item.id }}">Удалить</button>
-                                                        <!--<button type="button" class="btn btn-warning btn-sm mb-0 js-edit-el"  data-link="/manage/user/edit/" data-id="{{ item.id }}">Править</button>-->
+                                                        <button type="button" class="btn btn-danger btn-sm mb-0 js-delete-el" data-link="/manage/content/block/delete/" data-id="{{ item.id }}">Удалить</button>
+                                                        <button type="button" class="btn btn-warning btn-sm mb-0 js-edit-el"  data-link="/manage/content/block/edit/" data-id="{{ item.id }}">Править</button>
                                                     </td>
                                                     <td class="align-middle">
                                                         <div class=" form-check form-check-info text-start">
@@ -185,33 +202,39 @@
                                                         <span class="text-secondary text-xs font-weight-bold">{{ item.id }}</span>
                                                     </td>
                                                     <td class="align-middle text-left">
-                                                        <span class="text-primary text-sm">{{ item.clientId }}</span>
+                                                        <span class="text-primary text-sm">{{ item.name }}</span>
                                                     </td>
                                                     <td class="align-middle text-left">
-                                                        <span class="text-primary text-sm">{{ item.userId }}</span>
+                                                        <span class="text-primary text-sm">{{ item.code }}</span>
                                                     </td>
                                                     <td class="align-middle text-left">
-                                                        <span class="text-primary text-sm">{{ item.dateTime|date('d.m H:i:s') }}</span>
+                                                        <span class="text-primary text-sm">{{ item.dtCreate|date('d.m H:i') }}</span>
                                                     </td>
                                                     <td class="align-middle text-left">
-                                                        <span class="text-primary text-sm">{{ item.remoteAddr }}</span>
+                                                        <span class="text-primary text-sm">{{ item.dtUpdate|date('d.m H:i') }}</span>
                                                     </td>
                                                     <td class="align-middle text-left">
-                                                        <span class="text-primary text-sm">{{ item.userAgent }}</span>
+                                                        <span class="text-primary text-sm">{{ item.userCreate }}</span>
                                                     </td>
                                                     <td class="align-middle text-left">
-                                                        <span class="text-primary text-sm">{{ item.url }}</span>
+                                                        <span class="text-primary text-sm">{{ item.userUpdate }}</span>
                                                     </td>
                                                     <td class="align-middle text-left">
-                                                        <span class="text-primary text-sm">{{ item.page }}</span>
+                                                        <span class="text-primary text-sm">{{ item.active }}</span>
                                                     </td>
-                                                    <td class="align-middle text-center text-sm">
-                                                        <span class="text-primary text-sm">{{ item.ping }}</span>
+                                                    <td class="align-middle text-left">
+                                                        <span class="text-primary text-sm">{{ item.sort }}</span>
                                                     </td>
                                                 </tr>
                                             {% endfor %}
+                                            {% else %}
+                                                <tr>
+                                                    <td colspan="12" class="text-center"> -- Нет записей -- </td>
+                                                </tr>
+                                            {% endif %}
                                             </tbody>
                                             <tfoot>
+                                            {% if elements|length > 0 %}
                                             <tr>
                                                 <td></td>
                                                 <td class="text-right text-secondary text-lg font-weight-bolder opacity-7 ps-4 select-action-all-type">
@@ -227,22 +250,20 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td colspan="9">
+                                                <td colspan="10">
                                                     <div class="row m-0">
-                                                        <div class="col-2">
-                                                            <div class="">
-                                                                <select id="js-select-all-action" class="form-select">
-                                                                    <option selected value="no"> -- действие -- </option>
-                                                                    <option value="delete" data-url="/manage/statistic/delete_bulk"> удалить </option>
-                                                                </select>
-                                                            </div>
+                                                        <div class="col-2 ">
+                                                            <select id="js-select-all-action" class="form-select">
+                                                                <option selected value="no"> -- действие -- </option>
+                                                                <option value="delete" data-url="/manage/content/block/delete_bulk"> удалить </option>
+                                                            </select>
                                                         </div>
                                                         <div class="col-1 paginator">
                                                             {% if counter.previewPage %}
                                                                 <a href="{{ counter.previewPage.url }}"><span>Назад</span></a>
                                                             {% endif %}
                                                         </div>
-                                                        <div class="col-4 paginator">
+                                                        <div class="col-3 paginator">
                                                             {% if counter.pages|length %}
                                                                 <p class="text-secondary mb-0">
                                                                     Страницы:
@@ -265,7 +286,7 @@
                                                                 <a href="{{ counter.nextPage.url }}"><span>Вперёд</span></a>
                                                             {% endif %}
                                                         </div>
-                                                        <div class="col-3 text-right">
+                                                        <div class="col-4 text-right">
                                                             <select id="js-on-page-selector" class="form-select on-page-selector">
                                                                 <option value="5" {% if counter.limit == 5 %}selected{% endif %}> -- 5 на страницу -- </option>
                                                                 <option value="10" {% if counter.limit == 10 %}selected{% endif %}> -- 10 на страницу -- </option>
@@ -281,6 +302,11 @@
                                                     </div>
                                                 </td>
                                             </tr>
+                                            {% else %}
+                                                <tr>
+                                                    <td colspan="12"> </td>
+                                                </tr>
+                                            {% endif %}
                                             </tfoot>
                                         </table>
                                     </form>
@@ -289,9 +315,7 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
-
 {% endblock %}

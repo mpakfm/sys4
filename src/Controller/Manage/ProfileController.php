@@ -4,6 +4,7 @@ namespace App\Controller\Manage;
 
 use App\Form\UserType;
 use App\Repository\UserRepository;
+use App\Service\ContentManager;
 use Mpakfm\Printu;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -19,9 +20,14 @@ class ProfileController extends AdminController
     /**
      * @Route("/manage/profile", name="app_manage_profile")
      */
-    public function index(Request $request, UserRepository $repository, ValidatorInterface $validator, UserPasswordHasherInterface $userPasswordHasher, SluggerInterface $slugger): Response
+    public function index(Request $request,
+        UserRepository $repository,
+        ValidatorInterface $validator,
+        UserPasswordHasherInterface $userPasswordHasher,
+        SluggerInterface $slugger,
+        ContentManager $contentManager): Response
     {
-        $this->preLoad($request);
+        $this->preLoad($request, $contentManager);
 
         $currUser = $this->getUser();
         $user     = $repository->findBy(['email' => $currUser->getUserIdentifier()])[0];

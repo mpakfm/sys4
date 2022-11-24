@@ -4,41 +4,28 @@ namespace App\Controller\Manage;
 
 use App\Repository\StatClientConnectionsRepository;
 use App\Response\ListCounter;
+use App\Service\ContentManager;
 use Mpakfm\Printu;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Annotation\Route;
 
-class StatisticController extends AdminController
+class StatisticController extends CrudController
 {
-    /** @var int */
-    public $defaultLimit = 20;
-    /** @var int */
-    public $defaultOffset = 0;
-    /** @var string[] */
-    public $defaultOrder = [
-        'id' => 'desc'
-    ];
     /** @var string[] */
     public $accessOrder = ['id', 'client_id', 'user_id', 'date_time', 'remote_addr', 'user_agent', 'url', 'page', 'ping'];
     /** @var string[] */
     public $accessFilter = ['id', 'client_id', 'user_id', 'date_time', 'remote_addr', 'user_agent', 'url', 'page', 'ping'];
-    /** @var int */
-    public $limit;
-    /** @var int */
-    public $offset;
-    /** @var string[] */
-    public $order;
 
-    /**
-     * @Route("/manage/statistic", name="app_manage_statistic")
-     */
-    public function index(Request $request, StatClientConnectionsRepository $repository): Response
+    public function __construct(StatClientConnectionsRepository $repository)
     {
-        $this->preLoad($request);
+        $this->repository = $repository;
+    }
 
-        $query   = null;
+    public function index(Request $request, ContentManager $contentManager): Response
+    {
+        $this->preLoad($request, $contentManager);
+
         $counter = new ListCounter();
 
         $sort  = $request->get('sort');
@@ -73,7 +60,7 @@ class StatisticController extends AdminController
         Printu::info($criteria)->title('[controller] searchByNames $criteria');
         Printu::info($this->order)->title('[controller] searchByNames $this->order');
         $query    = $request->get('query') ? $request->get('query') : '';
-        $search   = $repository->searchByNames($query, $criteria, $this->order, $this->limit == 0 ? null : $this->limit, $this->offset);
+        $search   = $this->repository->searchByNames($query, $criteria, $this->order, $this->limit == 0 ? null : $this->limit, $this->offset);
         $elements = $search['list'];
 
         $counter->allItems  = $search['all'];
@@ -104,32 +91,4 @@ class StatisticController extends AdminController
         ]);
     }
 
-    /**
-     * @Route("/manage/statistic/delete/{id}", name="app_manage_statistic_delete")
-     */
-    public function delete(int $id, Request $request, StatClientConnectionsRepository $repository): Response
-    {
-        if (!$id) {
-            throw new NotFoundHttpException('Объект не найден');
-        }
-        $actionUser = $this->getUser();
-        $item       = $repository->find($id);
-        if (!$item) {
-            throw new NotFoundHttpException('Объект не найден');
-        }
-        $repository->remove($item, true);
-        return $this->redirectToRoute('app_manage_statistic');
-    }
-
-    /**
-     * @Route("/manage/statistic/delete_bulk", name="app_manage_statistic_delete_bulk", methods={"POST"})
-     */
-    public function deleteBulk(Request $request, StatClientConnectionsRepository $repository)
-    {
-        $ids = $request->request->get('ids');
-        $repository->deleteBulk($ids);
-        return $this->json([
-            'count'  => count($ids),
-        ]);
-    }
 }

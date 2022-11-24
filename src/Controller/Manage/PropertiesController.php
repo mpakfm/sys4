@@ -5,6 +5,7 @@ namespace App\Controller\Manage;
 use App\Form\PropertiesType;
 use App\Form\UserType;
 use App\Repository\PropertiesRepository;
+use App\Service\ContentManager;
 use Mpakfm\Printu;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,9 +17,9 @@ class PropertiesController extends AdminController
     /**
      * @Route("/manage/properties", name="app_manage_properties")
      */
-    public function index(Request $request, PropertiesRepository $repository): Response
+    public function index(Request $request, PropertiesRepository $repository, ContentManager $contentManager): Response
     {
-        $this->preLoad($request);
+        $this->preLoad($request, $contentManager);
 
         $prop = $repository->findOneBy([]);
 

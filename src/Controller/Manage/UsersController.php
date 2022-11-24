@@ -13,6 +13,7 @@ use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use App\Response\ListCounter;
+use App\Service\ContentManager;
 use Symfony\Component\Form\FormErrorIterator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,9 +45,9 @@ class UsersController extends AdminController
     /**
      * @Route("/manage/user/list", name="app_manage_user_list")
      */
-    public function index(Request $request, UserRepository $repository): Response
+    public function index(Request $request, UserRepository $repository, ContentManager $contentManager): Response
     {
-        $this->preLoad($request);
+        $this->preLoad($request, $contentManager);
         if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException('Access Denied.');
         }
@@ -101,9 +102,14 @@ class UsersController extends AdminController
     /**
      * @Route("/manage/user/edit/{id}", name="app_manage_user_edit")
      */
-    public function edit(int $id, Request $request, UserRepository $repository, ValidatorInterface $validator, UserPasswordHasherInterface $userPasswordHasher): Response
+    public function edit(int $id,
+        Request $request,
+        UserRepository $repository,
+        ValidatorInterface $validator,
+        UserPasswordHasherInterface $userPasswordHasher,
+        ContentManager $contentManager): Response
     {
-        $this->preLoad($request);
+        $this->preLoad($request, $contentManager);
 
         if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException('Access Denied.');
@@ -147,9 +153,14 @@ class UsersController extends AdminController
     /**
      * @Route("/manage/user/copy/{id}", name="app_manage_user_copy")
      */
-    public function copy(int $id, Request $request, UserRepository $repository, ValidatorInterface $validator, UserPasswordHasherInterface $userPasswordHasher): Response
+    public function copy(int $id,
+        Request $request,
+        UserRepository $repository,
+        ValidatorInterface $validator,
+        UserPasswordHasherInterface $userPasswordHasher,
+        ContentManager $contentManager): Response
     {
-        $this->preLoad($request);
+        $this->preLoad($request, $contentManager);
 
         if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException('Access Denied.');
@@ -194,9 +205,13 @@ class UsersController extends AdminController
     /**
      * @Route("/manage/user/create", name="app_manage_user_create")
      */
-    public function create(Request $request, UserRepository $repository, ValidatorInterface $validator, UserPasswordHasherInterface $userPasswordHasher): Response
+    public function create(Request $request,
+        UserRepository $repository,
+        ValidatorInterface $validator,
+        UserPasswordHasherInterface $userPasswordHasher,
+        ContentManager $contentManager): Response
     {
-        $this->preLoad($request);
+        $this->preLoad($request, $contentManager);
 
         $user = new User();
         $form = $this->createForm(UserType::class, $user);

@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 });
 
 function handlers() {
+
     $('#js-copy-item').click(function(){
         if (!$(this).data('id')) {
             return;

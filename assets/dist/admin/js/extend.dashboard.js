@@ -32,7 +32,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
         if (!id || !link) {
             return false;
         }
-        window.location = link + id;
+        let url = link + id;
+        $.ajax({
+            url: url,
+            method: 'get',
+            success: (data) => { window.location.reload(); },
+            error: (data) => { console.log('error data', data) }
+        });
     });
     $('.js-edit-el').click(function(){
         let id   = $(this).data('id');

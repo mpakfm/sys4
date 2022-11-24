@@ -9,6 +9,7 @@
 
 namespace App\Controller;
 
+use App\Service\ContentManager;
 use Mpakfm\Printu;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
@@ -40,7 +41,7 @@ class BaseController extends AbstractController
     {
     }
 
-    public function preLoad(Request $request)
+    public function preLoad(Request $request, ?ContentManager $contentManager = null)
     {
         // cookie
         $cookie = $request->cookies->get('client');

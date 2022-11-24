@@ -79,6 +79,36 @@
                         </li>
                     {% endif %}
                     {% if 'ROLE_ADMIN' in user.roles %}
+                        <li class="nav-item">
+                            <div class="nav-link {{ menu.section is defined and menu.section == 'content' ? 'active' : '' }}">
+                                <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                                    <i class="far fa-list-alt text-warning text-sm opacity-10"></i>
+                                </div>
+                                <span class="nav-link-text ms-1 font-weight-bold">Контент</span>
+                            </div>
+                            <ul class="navbar-nav">
+                                <li class="nav-item">
+                                    <a class="nav-link {{ menu.pount == 'block' ? 'active' : '' }}" href="/manage/content/block">
+                                        <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                                            <i class="far fa-list-alt text-warning text-sm opacity-10"></i>
+                                        </div>
+                                        <span class="nav-link-text ms-1">Блоки</span>
+                                    </a>
+                                </li>
+                                {% for item in contentList %}
+                                    <li class="nav-item">
+                                        <a class="nav-link " href="/manage/content/list/{{ item.id }}">
+                                            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                                                <i class="far fa-list-alt text-warning text-sm opacity-10"></i>
+                                            </div>
+                                            <span class="nav-link-text ms-1">{{ item.name }}</span>
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    {% endif %}
+                    {% if 'ROLE_ADMIN' in user.roles %}
                     <li class="nav-item">
                         <a class="nav-link {{ menu.pount == 'icons' ? 'active' : '' }}" href="/manage/icons">
                             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">

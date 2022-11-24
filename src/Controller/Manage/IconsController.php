@@ -9,6 +9,7 @@
 
 namespace App\Controller\Manage;
 
+use App\Service\ContentManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,9 +19,9 @@ class IconsController extends AdminController
     /**
      * @Route("/manage/icons", name="app_manage_icons")
      */
-    public function index(Request $request): Response
+    public function index(Request $request, ContentManager $contentManager): Response
     {
-        $this->preLoad($request);
+        $this->preLoad($request, $contentManager);
         return $this->baseRender('manage/icons/index.html.twig', [
             'controller_name' => 'IndexController',
             'menu' => [
