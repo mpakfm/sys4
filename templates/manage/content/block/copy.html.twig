@@ -9,7 +9,7 @@
         <ol class="breadcrumb  mb-0 pb-1 pt-1 me-sm-6 me-5">
             <li class="breadcrumb-item text-sm"><a class="opacity-5 " href="/manage/">Панель</a></li>
             <li class="breadcrumb-item text-sm"><a class="opacity-5 " href="/manage/content/block">Контент. Блоки.</a></li>
-            <li class="breadcrumb-item text-sm active" aria-current="page">Новый блок</li>
+            <li class="breadcrumb-item text-sm active" aria-current="page">Скопированный блок</li>
         </ol>
     </nav>
 {% endblock %}
@@ -17,19 +17,13 @@
 {% block body %}
     {{ form_start(form) }}
     <input name="_method" value="POST" type="hidden">
-    {% if item.id %}
-        <input id="item_id" name="item_id" value="{{ item.id }}" type="hidden">
-    {% else %}
-        <input id="item_id" name="item_id" value="" type="hidden">
-    {% endif %}
-    <input id="content_item_create" name="content[item_create]" value="{{ item.id }}" type="hidden">
-    <input id="content_item_update" name="content[item_update]" value="{{ item.id }}" type="hidden">
+    <input id="item_id" name="item_id" value="" type="hidden">
     <div class="row">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header pb-0">
                     <div class="d-flex align-items-center">
-                        <p class="mb-0">Новый блок</p>
+                        <p class="mb-0">Скопированный блок</p>
                         <button type="submit" class="btn btn-primary btn-sm ms-auto">Сохранить</button>
                     </div>
                 </div>

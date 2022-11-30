@@ -1,6 +1,6 @@
 {% extends 'manage/base.html.twig' %}
 
-{% block title %}Новый блок контента{% endblock %}
+{% block title %}Блок контента{% endblock %}
 
 {% block page_script %}{% endblock %}
 
@@ -9,7 +9,7 @@
         <ol class="breadcrumb  mb-0 pb-1 pt-1 me-sm-6 me-5">
             <li class="breadcrumb-item text-sm"><a class="opacity-5 " href="/manage/">Панель</a></li>
             <li class="breadcrumb-item text-sm"><a class="opacity-5 " href="/manage/content/block">Контент. Блоки.</a></li>
-            <li class="breadcrumb-item text-sm active" aria-current="page">Новый блок</li>
+            <li class="breadcrumb-item text-sm active" aria-current="page">Контент-блок</li>
         </ol>
     </nav>
 {% endblock %}
@@ -29,8 +29,9 @@
             <div class="card">
                 <div class="card-header pb-0">
                     <div class="d-flex align-items-center">
-                        <p class="mb-0">Новый блок</p>
+                        <p class="mb-0">Контент-блок</p>
                         <button type="submit" class="btn btn-primary btn-sm ms-auto">Сохранить</button>
+                        <button type="button" id="js-copy-item" class="btn btn-info btn-sm ms-2" data-id="{{ item.id }}">Копировать</button>
                     </div>
                 </div>
                 <div class="card-body">
@@ -87,7 +88,6 @@
         </div>
     </div>
     </form>
-
 {% endblock %}
 
 {%- block form_errors -%}

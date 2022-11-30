@@ -11,6 +11,9 @@ use Mpakfm\Printu;
 use Symfony\Component\Form\FormErrorIterator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ContentBlockController extends CrudController
 {
@@ -136,6 +139,70 @@ class ContentBlockController extends CrudController
             'errors'  => $errors,
             'form'    => $form,
             'item'    => $item,
+        ]);
+    }
+
+    public function edit(int $id,
+        Request $request,
+        ValidatorInterface $validator,
+        ContentManager $contentManager): Response
+    {
+        $this->preLoad($request, $contentManager);
+        if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
+            throw new AccessDeniedException('Access Denied.');
+        }
+        if (!$id) {
+            throw new NotFoundHttpException('Блок не найден');
+        }
+        $item = $this->repository->find($id);
+        if (!$item) {
+            throw new NotFoundHttpException('Блок не найден');
+        }
+        $form = $this->createForm(ContentType::class, $item);
+        $form->handleRequest($request);
+        $errors = null;
+        if ($form->isSubmitted() && $form->isValid()) {
+
+        }
+        return $this->baseRenderForm('manage/content/block/edit.html.twig', [
+            'menu' => [
+                'pount' => 'users'
+            ],
+            'errors' => $errors,
+            'item'   => $item,
+            'form'   => $form,
+        ]);
+    }
+
+    public function copy(int $id,
+        Request $request,
+        ValidatorInterface $validator,
+        ContentManager $contentManager): Response
+    {
+        $this->preLoad($request, $contentManager);
+        if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
+            throw new AccessDeniedException('Access Denied.');
+        }
+        if (!$id) {
+            throw new NotFoundHttpException('Блок не найден');
+        }
+        $item = $this->repository->find($id);
+        if (!$item) {
+            throw new NotFoundHttpException('Блок не найден');
+        }
+        $form = $this->createForm(ContentType::class, $item);
+        $form->handleRequest($request);
+        $errors = null;
+        if ($form->isSubmitted() && $form->isValid()) {
+
+        }
+        return $this->baseRenderForm('manage/content/block/copy.html.twig', [
+            'menu' => [
+                'pount' => 'users'
+            ],
+            'errors' => $errors,
+            'item'   => $item,
+            'form'   => $form,
         ]);
     }
 }

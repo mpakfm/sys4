@@ -27,6 +27,16 @@ app_manage_content_block_create:
   controller: App\Controller\Manage\ContentBlockController::create
   methods:    GET|POST
 
+app_manage_content_block_edit:
+  path:       /manage/content/block/edit/{id}
+  controller: App\Controller\Manage\ContentBlockController::edit
+  methods:    GET|POST
+
+app_manage_content_block_copy:
+  path:       /manage/content/block/copy/{id}
+  controller: App\Controller\Manage\ContentBlockController::copy
+  methods:    GET|POST
+
 app_manage_content_block_delete:
   path:       /manage/content/block/delete/{id}
   controller: App\Controller\Manage\ContentBlockController::delete
